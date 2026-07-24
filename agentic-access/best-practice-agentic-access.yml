@@ -1,0 +1,390 @@
+generated: '2026-07-24'
+method: generated
+source: openapi/haloconnect-desktop-openapi.json, openapi/haloconnect-integrator-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 29
+  by_action_class:
+    acting: 14
+    connected: 15
+  by_consequence:
+    write: 14
+    read: 15
+  human_in_the_loop_required: 0
+operations:
+- path: /integrator/token
+  method: post
+  operationId: obtainToken
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /desktop/sites/{siteId}/queries/immediate
+  method: post
+  operationId: createImmediateQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /desktop/sites/{siteId}/queries/async
+  method: post
+  operationId: createAsyncQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /desktop/sites/{siteId}/queries/registered
+  method: post
+  operationId: createRegisteredQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /desktop/sites/{siteId}/queries/registered
+  method: get
+  operationId: getRegisteredQueries
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/queries/registered/{queryId}
+  method: get
+  operationId: getRegisteredQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/queries/registered/{queryId}
+  method: delete
+  operationId: cancelRegisteredQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /desktop/sites/{siteId}/queries/registered/{queryId}/results
+  method: get
+  operationId: getRegisteredQueryResult
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/queries/{queryId}
+  method: get
+  operationId: getQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/queries/{queryId}/results/{pageNumber}
+  method: get
+  operationId: getResultPage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/fhir/R4/{fhirParameters}
+  method: get
+  operationId: getFhirQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /desktop/sites/{siteId}/fhir/R4/{resource}/_search
+  method: post
+  operationId: postFhirSearch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/immediate
+  method: post
+  operationId: createImmediateQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/async
+  method: post
+  operationId: createAsyncQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/registered
+  method: post
+  operationId: createRegisteredQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/registered
+  method: get
+  operationId: getRegisteredQueries
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/queries/registered/{queryId}
+  method: get
+  operationId: getRegisteredQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/queries/registered/{queryId}
+  method: delete
+  operationId: cancelRegisteredQuery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/registered/{queryId}/results
+  method: get
+  operationId: getRegisteredQueryResult
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/queries/{queryId}
+  method: get
+  operationId: getQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/queries/status
+  method: post
+  operationId: getQueryStatusBatch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites/{siteId}/queries/{queryId}/results/{pageNumber}
+  method: get
+  operationId: getResultPage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/queries/{queryId}/results/{pageNumber}/stream
+  method: get
+  operationId: streamResultPage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/fhir/R4/{fhirParameters}
+  method: get
+  operationId: getFhirQuery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}/fhir/R4/{resource}/_search
+  method: post
+  operationId: postFhirSearch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/pair-site
+  method: post
+  operationId: Integrator_PairSite
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/pairSite
+  method: post
+  operationId: pairSite
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /integrator/sites
+  method: get
+  operationId: getSites
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /integrator/sites/{siteId}
+  method: get
+  operationId: getSite
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

@@ -1,0 +1,48 @@
+generated: '2026-07-24'
+method: derived
+source: openapi/haloconnect-integrator-openapi.json, openapi/haloconnect-desktop-openapi.json
+format: custom
+note: >-
+  Halo Cloud returns a custom error envelope, not RFC 9457 application/problem+json.
+  Transport-level errors use {error:{status,statusText,message}}. Query-execution
+  failures (SQL/FHIR run against the practice database) carry a richer per-query error
+  object with errorType (http|mssql|fbsql|haloLink), errorCode and errorMessage inside
+  the query status/result payload.
+envelope:
+  transport:
+    shape: '{ error: { status: <int>, statusText: <string>, message: <string> } }'
+    schema: '#/components/schemas/Error'
+  query_execution:
+    shape: '{ status: "executionFailed", errorDetails: { errorType, errorCode, errorMessage } }'
+    schema: '#/components/schemas/FailedQueryErrorPropertiesV2'
+    error_types: [http, mssql, fbsql, haloLink]
+problems:
+- status: 400
+  title: Bad request
+  meaning: Malformed request, invalid SQL/FHIR parameters, or missing required fields.
+- status: 401
+  title: Unauthorized
+  meaning: >-
+    Missing/invalid Ocp-Apim-Subscription-Key, or (desktop) an expired/invalid bearer
+    token — returns {"statusCode":401,"message":"Invalid token"}.
+- status: 403
+  title: Forbidden
+  meaning: Subscription valid but no active pairing with the target site, or resource not permitted.
+- status: 404
+  title: Not found
+  meaning: Unknown site, query, page, or FHIR resource.
+- status: 410
+  title: Gone
+  meaning: Query result expired / no longer retrievable (registered-query or async result TTL elapsed).
+- status: 500
+  title: Internal server error
+  meaning: Unexpected Halo Cloud error.
+- status: 502
+  title: Bad gateway
+  meaning: Upstream failure reaching Halo Link / the practice PMS database.
+- status: 503
+  title: Service unavailable
+  meaning: Halo Link at the practice is offline/unreachable, or the service is temporarily down.
+- status: 504
+  title: Gateway timeout
+  meaning: Practice-side query did not complete within the gateway timeout window.

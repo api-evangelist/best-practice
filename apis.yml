@@ -133,6 +133,12 @@ apis:
   - type: ImplementationGuide
     url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
 common:
+- type: AgenticAccess
+  url: agentic-access/best-practice-agentic-access.yml
+- type: DomainSecurity
+  url: security/best-practice-domain-security.yml
+- type: Authentication
+  url: authentication/best-practice-authentication.yml
 - type: Website
   url: https://bpsoftware.net/
 - type: DeveloperPortal
@@ -153,6 +159,36 @@ common:
   url: https://bpsoftware.net/terms-of-use/
 - type: PrivacyPolicy
   url: https://bpsoftware.net/privacy-policy/
+- type: Conventions
+  url: conventions/best-practice-conventions.yml
+- type: ErrorCatalog
+  url: errors/best-practice-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/best-practice-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/best-practice-lifecycle.yml
+- type: Conformance
+  url: conformance/best-practice-conformance.yml
+- type: DataModel
+  url: data-model/best-practice-data-model.yml
+- type: WellKnown
+  url: well-known/best-practice-well-known.yml
+- type: Sandbox
+  url: sandbox/best-practice-sandbox.yml
+- type: ChangeLog
+  url: changelog/best-practice-changelog.yml
+- type: Webhooks
+  url: asyncapi/best-practice-webhooks.yml
+- type: MCPServer
+  url: mcp/best-practice-mcp.yml
+- type: LLMsTxt
+  url: llms/best-practice-llms.txt
+- type: Overlay
+  url: overlays/best-practice-integrator-overlay.yaml
+- type: Overlay
+  url: overlays/best-practice-desktop-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

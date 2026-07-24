@@ -1,0 +1,16 @@
+generated: '2026-07-24'
+method: generated
+source: openapi/haloconnect-integrator-openapi.json + Halo Connect docs
+skills:
+- file: best-practice-fhir-patient-lookup.md
+  name: FHIR patient lookup and summary (Bp Premier)
+  api: openapi/haloconnect-integrator-openapi.json
+  operations: [getSites, Integrator_PairSite, getFhirQuery, postFhirSearch]
+- file: best-practice-async-sql-query.md
+  name: Run an async SQL Passthrough query and page results
+  api: openapi/haloconnect-integrator-openapi.json
+  operations: [createAsyncQuery, getQuery, getQueryStatusBatch, getResultPage, streamResultPage]
+- file: best-practice-registered-query-webhook.md
+  name: Register a recurring query and receive webhook notifications
+  api: openapi/haloconnect-integrator-openapi.json
+  operations: [createRegisteredQuery, getRegisteredQueries, getRegisteredQuery, getRegisteredQueryResult, cancelRegisteredQuery]

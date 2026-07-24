@@ -1,0 +1,25 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.haloconnect.io/release-notes/ , https://haloconnect.io/sla ,
+  https://status.haloconnect.io/ , openapi/haloconnect-integrator-openapi.json
+versioning:
+  scheme: calendar
+  current: 26.714.10458
+  pattern: 'YY.MMDD.build (calendar-versioned, e.g. 26.619.10213)'
+  in_spec: info.version
+  docs: https://docs.haloconnect.io/release-notes/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No formal published deprecation policy or RFC 8594 Sunset/Deprecation header support
+    found. The spec marks pairSite as a deprecated operation superseded by Integrator_PairSite.
+sla:
+  url: https://haloconnect.io/sla
+status_page: https://status.haloconnect.io/
+release_notes:
+  index: https://docs.haloconnect.io/release-notes/
+  years: [2022, 2023, 2024, 2025, 2026]
+deprecated_operations:
+- openapi/haloconnect-integrator-openapi.json#pairSite

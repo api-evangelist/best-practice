@@ -1,0 +1,44 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.haloconnect.io/halo-cloud/fhir-api/overview/ ,
+  https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/ ,
+  openapi/haloconnect-integrator-openapi.json
+standards:
+- id: hl7-fhir-r4
+  conforms: true
+  evidence: >-
+    FHIR API implements HL7 FHIR R4 (4.0.1); resources served under
+    /integrator/sites/{siteId}/fhir/R4/ with a CapabilityStatement at {baseUrl}/metadata.
+- id: au-base-4.1.0
+  conforms: true
+  evidence: >-
+    FHIR API for Bp Premier is built to the AU Base 4.1.0 implementation guide, falling
+    back to HL7 FHIR R4 (4.0.1); per-PMS resource mappings published as a FHIR
+    Implementation Guide in the Bp Premier knowledge base.
+- id: fhir-capabilitystatement
+  conforms: true
+  evidence: CapabilityStatement exposed at {baseUrl}/metadata per FHIR conformance requirements.
+- id: ips-patient-summary
+  conforms: true
+  evidence: >-
+    Patient $summary operation returns an International Patient Summary (IPS) document
+    keyed by an identifier such as Medicare number.
+- id: fhir-search
+  conforms: true
+  evidence: >-
+    GET FHIR search and POST _search (getFhirQuery / postFhirSearch) implement FHIR
+    RESTful search on Patient, Practitioner, Appointment, Slot, DocumentReference.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No OAuth2/OIDC. Access is an Azure API Management subscription key
+    (Ocp-Apim-Subscription-Key); desktop apps add a bearer JWT + DeviceId. No SMART on FHIR.
+- id: smart-on-fhir
+  conforms: false
+  evidence: Docs make no mention of SMART on FHIR authorization; partner-gated key/JWT auth instead.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use a custom envelope {error:{status,statusText,message}}, not
+    application/problem+json.

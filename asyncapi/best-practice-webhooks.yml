@@ -1,0 +1,46 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://haloconnect.io/blog/webhooks-now-live ,
+  https://docs.haloconnect.io/release-notes/2026/
+spec_type: Webhooks
+summary: >-
+  Halo Connect webhooks are notification-only callbacks that fire when an async query
+  completes or a registered query detects a data change, removing the need to poll for
+  results. Payloads carry metadata only (never practice data). There are no predefined
+  event subscriptions: any SQL a partner can express as a registered query becomes a
+  listenable event. Delivery is HMAC-SHA256 signed with a per-integrator secret and is
+  retried on failure.
+registration:
+  method: Integrator registers a single webhook URL (or URL template) with Halo, linked to their Halo Cloud subscription; contact support to configure.
+  url_template_variables: ['{siteId}', '{queryId}', '{source}']
+security:
+  signature: HMAC-SHA256
+  secret: unique per integrator
+  signed_payload_format: '<message_body>.<timestamp_iso8601>'
+  headers:
+  - name: X-Halo-Signature-256
+    description: HMAC-SHA256 signature over '<message_body>.<timestamp_iso8601>'.
+  - name: X-Halo-Timestamp
+    description: ISO 8601 timestamp of the delivery, used for replay prevention.
+  - name: X-Halo-Id
+    description: Unique webhook delivery identifier.
+delivery:
+  retries: true
+  note: Webhook retry behaviour improved in release 25.1211 (Jan 2026).
+events:
+- name: query.completed
+  trigger: An async query finishes and results are available.
+  payload_fields: [siteId (Halo GUID), queryId, webhookSource]
+  webhookSource: async
+- name: registered_query.data_changed
+  trigger: A registered (recurring) query detects new/changed data at the practice.
+  payload_fields: [siteId (Halo GUID), queryId, webhookSource]
+  webhookSource: registered
+payload:
+  contains_practice_data: false
+  note: Payload is a notification that something happened; the partner then fetches results via the query result endpoints.
+  fields:
+    siteId: Halo GUID of the practice that was queried.
+    queryId: ID of the async/registered query that triggered the webhook.
+    webhookSource: One of 'async' | 'registered'.

@@ -1,0 +1,49 @@
+generated: '2026-07-24'
+method: derived
+source: >-
+  openapi/haloconnect-integrator-openapi.json ,
+  https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+note: >-
+  Derived from the Halo Cloud OpenAPI path/parameter structure and the documented FHIR
+  resource set. The OpenAPI component schemas describe query-execution envelopes rather
+  than domain entities, so the entity graph is derived from the resource hierarchy
+  (Site -> Query/RegisteredQuery -> Result) plus the FHIR clinical resources exposed
+  per site.
+entities:
+- name: Site
+  description: An instance of Halo Link paired to a practice's PMS database; identified by a Halo GUID (siteId).
+  id: siteId
+  relationships:
+  - {type: has_many, target: Query, via: siteId}
+  - {type: has_many, target: RegisteredQuery, via: siteId}
+  - {type: has_many, target: FhirResource, via: siteId}
+- name: Query
+  description: An immediate or async SQL passthrough query submitted against a site.
+  id: queryId
+  relationships:
+  - {type: belongs_to, target: Site, via: siteId}
+  - {type: has_many, target: ResultPage, via: queryId}
+- name: RegisteredQuery
+  description: A recurring SQL query that runs at a set frequency and can trigger webhooks.
+  id: queryId
+  relationships:
+  - {type: belongs_to, target: Site, via: siteId}
+  - {type: has_many, target: ResultPage, via: queryId}
+- name: ResultPage
+  description: A paginated page of a query result set (retrieved by pageNumber).
+  id: pageNumber
+  relationships:
+  - {type: belongs_to, target: Query, via: queryId}
+- name: FhirResource
+  description: FHIR R4 clinical resources exposed per site under /fhir/R4/.
+  fhir_version: R4 (4.0.1)
+  au_base: 4.1.0
+  resources: [Patient, Practitioner, Appointment, Slot, DocumentReference]
+  operations: [$summary, $waitlist, $find-free]
+  relationships:
+  - {type: belongs_to, target: Site, via: siteId}
+- name: Webhook
+  description: A per-integrator notification callback fired on query completion / registered-query change.
+  relationships:
+  - {type: belongs_to, target: RegisteredQuery, via: queryId}
+  - {type: belongs_to, target: Query, via: queryId}

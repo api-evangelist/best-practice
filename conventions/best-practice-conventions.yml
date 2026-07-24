@@ -1,0 +1,46 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.haloconnect.io/halo-cloud/getting-started/ ,
+  https://docs.haloconnect.io/halo-cloud/overview/ ,
+  openapi/haloconnect-integrator-openapi.json, openapi/haloconnect-desktop-openapi.json
+authentication:
+  style: api-key-header
+  integrator: Ocp-Apim-Subscription-Key (Azure API Management subscription key)
+  desktop: Ocp-Apim-Subscription-Key + Authorization bearer JWT + DeviceId header
+  pairing_required: Every site-scoped call requires an active pairing with the target siteId.
+  see: authentication/best-practice-authentication.yml
+idempotency:
+  supported: false
+  note: >-
+    No idempotency-key header or parameter is documented or present in the OpenAPI.
+    Query submission is not idempotent; async/registered queries are identified by a
+    server-issued queryId after creation.
+pagination:
+  style: page-number
+  applies_to: async query results and registered query results
+  request_params: [siteId, queryId, pageNumber]
+  operations: [getResultPage, streamResultPage, getRegisteredQueryResult]
+  response_fields: [pagination, pageNumber, totalPages]
+  immediate_limit: Immediate (synchronous) query responses are capped at 8MB; use async for larger results.
+  streaming: streamResultPage streams a single result page for large payloads.
+query_modes:
+  immediate: Small, time-sensitive; result returned in seconds (createImmediateQuery).
+  async: Queued; poll status (getQuery / getQueryStatusBatch) then fetch result pages (createAsyncQuery).
+  registered: Recurring queries run at a set frequency (createRegisteredQuery); results retrieved by page.
+versioning:
+  scheme: calendar
+  in_spec: info.version
+  see: lifecycle/best-practice-lifecycle.yml
+error_envelope:
+  transport: '{ error: { status, statusText, message } }'
+  query_execution: '{ status: "executionFailed", errorDetails: { errorType, errorCode, errorMessage } }'
+  see: errors/best-practice-problem-types.yml
+events:
+  webhooks: true
+  note: >-
+    Webhooks (HMAC-SHA256 signed) remove the need to poll async/registered query results.
+    See asyncapi/best-practice-webhooks.yml.
+rate_limiting:
+  documented: false
+  note: No rate-limit headers or published quotas found; fronted by Azure API Management.

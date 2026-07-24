@@ -1,0 +1,23 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Halo Cloud API for Integrators
+  version: 1.0.0
+extends: openapi/haloconnect-integrator-openapi.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: best-practice
+    x-apievangelist-api: best-practice:halo-cloud-integrator-api
+    x-apievangelist-standards: [hl7-fhir-r4, au-base-4.1.0, ips-patient-summary]
+    x-apievangelist-auth: azure-apim-subscription-key
+    x-apievangelist-access: partner-gated (Halo Cloud subscription + per-practice pairing)
+    x-apievangelist-events: webhooks (HMAC-SHA256, async + registered query notifications)
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/best-practice-authentication.yml
+      conventions: conventions/best-practice-conventions.yml
+      errors: errors/best-practice-problem-types.yml
+      lifecycle: lifecycle/best-practice-lifecycle.yml
+      conformance: conformance/best-practice-conformance.yml
+      webhooks: asyncapi/best-practice-webhooks.yml

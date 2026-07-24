@@ -1,0 +1,21 @@
+generated: '2026-07-24'
+method: searched
+source: >-
+  https://docs.haloconnect.io/halo-cloud/getting-started/ ,
+  openapi/haloconnect-integrator-openapi.json
+summary: >-
+  Halo Connect runs distinct production and staging environments. There is no self-serve
+  public sandbox or published set of magic/test values: integration is partner-gated and
+  requires a Halo Cloud subscription plus per-practice pairing, so testing is done against
+  a real (staging) pairing using tools such as Postman or Insomnia. No test cards, tokens,
+  or synthetic identifiers are published (this is not a payments API).
+environments:
+- name: production
+  base_url: https://api.haloconnect.io
+- name: staging
+  base_url: https://api.stage.haloconnect.io
+test_values:
+  published: false
+  note: No public test credentials/fixtures; access requires an issued subscription key and an active site pairing.
+tooling:
+  recommended: [Postman, Insomnia]

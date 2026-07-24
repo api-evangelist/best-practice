@@ -1,0 +1,28 @@
+# Best Practice Software — Halo Connect (Halo Cloud)
+
+> Best Practice Software is an Australian clinical and practice-management software company (Bp Premier, Bp VIP.net, Bp Allied). Its programmatic surface is Halo Connect / Halo Cloud, a FHIR-based, partner-gated integration platform that lets approved integrators query Bp Premier practice data over a modern API (FHIR R4 / AU Base 4.1.0, SQL Passthrough, Registered Queries) instead of the legacy SQL database. Access requires a Halo Cloud subscription, per-practice pairing, and an Azure API Management subscription key; it is not a self-serve public API.
+
+## APIs
+- [Halo Cloud API for Integrators](https://docs.haloconnect.io/api-reference/integrator-openapi.html): Sites, SQL Passthrough, FHIR search, Registered Queries. Auth: Ocp-Apim-Subscription-Key.
+- [Halo Cloud API for Desktop Applications](https://docs.haloconnect.io/api-reference/desktop-openapi.html): token + SQL Passthrough + FHIR for locally installed apps. Auth: subscription key + bearer JWT + DeviceId.
+- [FHIR API for Bp Premier](https://docs.haloconnect.io/halo-cloud/fhir-api/overview/): HL7 FHIR R4 (4.0.1) / AU Base 4.1.0; Patient, Practitioner, Appointment, Slot, DocumentReference; $summary (IPS), $waitlist, $find-free; CapabilityStatement at {baseUrl}/metadata.
+
+## Specs
+- [Integrator OpenAPI 3.1.1](https://raw.githubusercontent.com/api-evangelist/best-practice/refs/heads/main/openapi/haloconnect-integrator-openapi.json)
+- [Desktop OpenAPI 3.1.1](https://raw.githubusercontent.com/api-evangelist/best-practice/refs/heads/main/openapi/haloconnect-desktop-openapi.json)
+
+## Docs
+- [Halo Cloud overview](https://docs.haloconnect.io/halo-cloud/overview/)
+- [Getting started](https://docs.haloconnect.io/halo-cloud/getting-started/)
+- [FHIR capabilities](https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/)
+- [Release notes](https://docs.haloconnect.io/release-notes/)
+- [SLA](https://haloconnect.io/sla)
+- [Status](https://status.haloconnect.io/)
+- [Blog](https://haloconnect.io/blog)
+
+## Conventions
+- Auth: Azure API Management subscription key header `Ocp-Apim-Subscription-Key`; desktop adds `Authorization: Bearer <JWT>` + `DeviceId`. Every site-scoped call needs an active pairing.
+- Query modes: immediate (<=8MB, seconds), async (queued, paginated result pages by pageNumber), registered (recurring).
+- Webhooks: HMAC-SHA256 signed (headers `X-Halo-Signature-256`, `X-Halo-Timestamp`, `X-Halo-Id`); notify on async completion / registered-query change; payload is metadata only.
+- Errors: custom envelope `{ error: { status, statusText, message } }`; not RFC 9457.
+- No idempotency keys, no OAuth2/SMART on FHIR, no public SDK.

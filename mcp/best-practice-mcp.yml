@@ -1,0 +1,30 @@
+generated: '2026-07-24'
+method: derived
+status: candidate
+source: openapi/haloconnect-integrator-openapi.json
+note: >-
+  No official hosted/remote MCP server is published by Best Practice / Halo Connect.
+  This is a candidate tool list derived one-to-one from the Halo Cloud Integrator OpenAPI
+  operations. Every tool inherits its real inputSchema from the backing operation's
+  parameters + requestBody. All calls require an Ocp-Apim-Subscription-Key and an active
+  site pairing, so any real MCP server would be auth-gated.
+server:
+  name: halo-cloud-integrator
+  transport: http
+  url: null
+tools:
+- {name: pair_site, description: Establish a pairing with a target site, source_operation: 'openapi/haloconnect-integrator-openapi.json#Integrator_PairSite'}
+- {name: get_sites, description: Find sites by PMS ID, source_operation: 'openapi/haloconnect-integrator-openapi.json#getSites'}
+- {name: get_site, description: Get site status, source_operation: 'openapi/haloconnect-integrator-openapi.json#getSite'}
+- {name: create_immediate_query, description: Execute an immediate SQL query, source_operation: 'openapi/haloconnect-integrator-openapi.json#createImmediateQuery'}
+- {name: create_async_query, description: Submit an async SQL query, source_operation: 'openapi/haloconnect-integrator-openapi.json#createAsyncQuery'}
+- {name: get_query, description: Get query status, source_operation: 'openapi/haloconnect-integrator-openapi.json#getQuery'}
+- {name: get_query_status_batch, description: Get batch query status, source_operation: 'openapi/haloconnect-integrator-openapi.json#getQueryStatusBatch'}
+- {name: get_result_page, description: Get a query result page, source_operation: 'openapi/haloconnect-integrator-openapi.json#getResultPage'}
+- {name: create_registered_query, description: Create a recurring registered query, source_operation: 'openapi/haloconnect-integrator-openapi.json#createRegisteredQuery'}
+- {name: get_registered_queries, description: List registered queries, source_operation: 'openapi/haloconnect-integrator-openapi.json#getRegisteredQueries'}
+- {name: get_registered_query, description: Get registered query details, source_operation: 'openapi/haloconnect-integrator-openapi.json#getRegisteredQuery'}
+- {name: cancel_registered_query, description: Cancel a registered query, source_operation: 'openapi/haloconnect-integrator-openapi.json#cancelRegisteredQuery'}
+- {name: get_registered_query_result, description: Get registered query results, source_operation: 'openapi/haloconnect-integrator-openapi.json#getRegisteredQueryResult'}
+- {name: search_fhir, description: Search FHIR resources (GET), source_operation: 'openapi/haloconnect-integrator-openapi.json#getFhirQuery'}
+- {name: post_fhir_search, description: Search FHIR resources (POST _search), source_operation: 'openapi/haloconnect-integrator-openapi.json#postFhirSearch'}

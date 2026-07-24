@@ -1,0 +1,39 @@
+generated: '2026-07-24'
+method: searched
+source: https://docs.haloconnect.io/release-notes/2026/
+scheme: calendar
+current_version: 26.714.10458
+docs: https://docs.haloconnect.io/release-notes/
+entries:
+- version: '26.0713'
+  date: '2026-07-13'
+  highlights: [Restored backward compatibility with Bp Premier pre-Oxford SP1, release-ring/traffic-burst handling]
+- version: '26.0710'
+  date: '2026-07-10'
+  highlights: [Support for Bp Premier Oxford SP1 security updates]
+- version: '26.0525'
+  date: '2026-05-25'
+  additions: [New $waitlist FHIR operation for Bp Premier]
+- version: '26.0518'
+  date: '2026-05-18'
+  highlights: [Fixed async query execution bug that stalled queries]
+- version: '26.0430'
+  date: '2026-04-30'
+  additions: [Patient update via FHIR API for Bp Premier]
+  highlights: [Optimized query execution and result-upload processing]
+- version: '26.0407'
+  date: '2026-04-07'
+  highlights: [Fixed $find-free null reference, improved site lookup, resolved result-fetch timeouts]
+- version: '26.0330'
+  date: '2026-03-30'
+  highlights: [Transient HTTP error handling, better SQL error reporting, fixed registered/async query stalls]
+- version: '26.0226'
+  date: '2026-02-26'
+  additions: [Batch async query status endpoint (getQueryStatusBatch)]
+- version: '26.0220'
+  date: '2026-02-20'
+  highlights: [Major integrator portal redesign - new UI, dashboard, admin roles]
+- version: '25.1211'
+  date: '2026-01-05'
+  additions: [Webhook retry behaviour improvements]
+  highlights: [Enhanced async query uploads, fixed registered-query expiration]

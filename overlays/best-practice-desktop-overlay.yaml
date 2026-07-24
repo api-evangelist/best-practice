@@ -1,0 +1,19 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Halo Cloud API for Desktop Applications
+  version: 1.0.0
+extends: openapi/haloconnect-desktop-openapi.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: best-practice
+    x-apievangelist-api: best-practice:halo-cloud-desktop-api
+    x-apievangelist-auth: azure-apim-subscription-key + bearer-jwt + device-id
+    x-apievangelist-access: partner-gated (Halo Cloud subscription + per-practice pairing)
+    x-apievangelist-token: obtainToken issues a short-lived Desktop API token; renew periodically
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/best-practice-authentication.yml
+      conventions: conventions/best-practice-conventions.yml
+      errors: errors/best-practice-problem-types.yml
