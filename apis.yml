@@ -1,0 +1,158 @@
+aid: best-practice
+url: https://raw.githubusercontent.com/api-evangelist/best-practice/refs/heads/main/apis.yml
+name: Best Practice Software
+kind: company
+description: >-
+  Best Practice Software is an Australian clinical and practice-management software
+  company, headquartered in Bundaberg, Queensland, and one half of the Australian
+  GP-software duopoly (alongside MedicalDirector). Its flagship products - Bp Premier
+  (general practice), Bp VIP.net (specialist and allied), and Bp Allied - run in
+  thousands of Australian medical practices. Best Practice's programmatic surface is
+  delivered through Halo Connect (Halo Cloud / Halo Link), a FHIR-based integration
+  platform that lets approved partners query practice data over a modern API instead
+  of the legacy SQL database. The FHIR API for Bp Premier is built to the AU Base 4.1.0
+  implementation guide, falling back to HL7 FHIR R4 (4.0.1), and exposes resources
+  such as Patient, Appointment, Slot (Find Free Slots) and a Patient $summary document.
+  Halo Cloud also offers SQL Passthrough and Registered Queries for structured
+  practice data. Access is gated - integrators require a Halo Cloud subscription plus
+  per-practice pairing and PMS-managed database credentials, authenticated with an
+  Azure API Management subscription key (desktop apps additionally use a bearer JWT and
+  device id). This is not a self-serve public API; it is a partner-onboarded,
+  standards-aligned interoperability layer for the Australian primary-care market.
+accessModel:
+  pricing: unknown
+  onboarding: partner
+  trial: false
+  try_now: false
+  public: false
+  label: Partner-gated · Halo Cloud subscription + practice pairing
+  confidence: high
+  source:
+  - authentication
+  - documentation
+  generated: '2026-07-24'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Healthcare
+- Australia
+- EHR
+- EMR
+- FHIR
+- HL7
+- Interoperability
+- AU Base
+- Practice Management
+- General Practice
+- Appointments
+- Scheduling
+created: '2026-07-24'
+modified: '2026-07-24'
+specificationVersion: '0.19'
+apis:
+- aid: best-practice:halo-cloud-integrator-api
+  name: Halo Cloud API for Integrators
+  description: >-
+    The integrator-facing Halo Cloud API from Best Practice's Halo Connect platform.
+    Lets approved partners query Bp Premier practice data by four means - Sites
+    (retrieve site metadata and onboarding info), SQL Passthrough (execute SQL against
+    the practice database), FHIR (search practice data as HL7 FHIR R4 resources), and
+    Registered Queries (recurring SQL). OpenAPI 3.1.1, authenticated with an Azure API
+    Management subscription key (Ocp-Apim-Subscription-Key header); every call requires
+    an active pairing with the target site.
+  humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  baseURL: https://api.haloconnect.io
+  tags:
+  - FHIR
+  - Healthcare
+  - Interoperability
+  - SQL Passthrough
+  properties:
+  - type: OpenAPI
+    url: openapi/haloconnect-integrator-openapi.json
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/overview/
+  - type: GettingStarted
+    url: https://docs.haloconnect.io/halo-cloud/getting-started/
+- aid: best-practice:halo-cloud-desktop-api
+  name: Halo Cloud API for Desktop Applications
+  description: >-
+    The desktop-application-facing Halo Cloud API from Halo Connect. Provides a token
+    endpoint plus SQL Passthrough and FHIR query access for locally installed
+    applications integrating with Bp Premier. OpenAPI 3.1.1, authenticated with an
+    Azure API Management subscription key together with a bearer JWT and a DeviceId
+    header identifying the calling device.
+  humanURL: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  baseURL: https://api.haloconnect.io
+  tags:
+  - FHIR
+  - Healthcare
+  - Desktop
+  - SQL Passthrough
+  properties:
+  - type: OpenAPI
+    url: openapi/haloconnect-desktop-openapi.json
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/overview/
+  - type: GettingStarted
+    url: https://docs.haloconnect.io/halo-cloud/getting-started/
+- aid: best-practice:fhir-api-bp-premier
+  name: FHIR API for Bp Premier
+  description: >-
+    The HL7 FHIR API for Best Practice Bp Premier, delivered through Halo Connect. Built
+    to the AU Base 4.1.0 implementation guide, falling back to FHIR R4 (4.0.1) where
+    needed. Resources are served under the base path
+    https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4/ with a
+    CapabilityStatement at {baseUrl}/metadata; documented resources and operations
+    include Patient, Appointment, Slot (Find Free Slots) and a Patient $summary
+    document. The per-Bp-Premier resource mappings are published as a FHIR
+    Implementation Guide in the Bp Premier knowledge base (login required). Access is
+    gated to approved Best Practice partners; the FHIR search operations are also
+    described in the Halo Cloud Integrator OpenAPI.
+  humanURL: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  baseURL: https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4
+  tags:
+  - FHIR
+  - HL7
+  - AU Base
+  - Healthcare
+  - Interoperability
+  properties:
+  - type: OpenAPI
+    url: openapi/haloconnect-integrator-openapi.json
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/examples/
+  - type: ImplementationGuide
+    url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
+common:
+- type: Website
+  url: https://bpsoftware.net/
+- type: DeveloperPortal
+  url: https://docs.haloconnect.io/
+- type: Documentation
+  url: https://docs.haloconnect.io/halo-cloud/overview/
+- type: APIReference
+  url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+- type: GettingStarted
+  url: https://docs.haloconnect.io/halo-cloud/getting-started/
+- type: Blog
+  url: https://haloconnect.io/blog
+- type: StatusPage
+  url: https://status.haloconnect.io/
+- type: Support
+  url: https://bpsoftware.net/contact/
+- type: TermsOfService
+  url: https://bpsoftware.net/terms-of-use/
+- type: PrivacyPolicy
+  url: https://bpsoftware.net/privacy-policy/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

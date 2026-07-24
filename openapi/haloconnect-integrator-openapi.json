@@ -1,0 +1,3183 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "version": "26.619.10213",
+    "title": "Halo Cloud API for Integrators",
+    "contact": {
+      "name": "Halo Connect Support",
+      "email": "support@haloconnect.io"
+    },
+    "license": {
+      "name": "Copyright © Halo Connect 2023",
+      "url": "http://haloconnect.io"
+    },
+    "x-logo": {
+      "url": "https://20496383.fs1.hubspotusercontent-na1.net/hubfs/20496383/halo_logo%20(1).png",
+      "altText": "Halo Connect Logo"
+    },
+    "description": "## Introduction\nThis API reference documents the endpoints available to integrators using the Halo Connect Cloud API. It covers:\n\n- **Sites** – Retrieve site metadata and onboarding information\n- **SQL Passthrough** – Execute SQL queries against practice databases\n- **FHIR** – Query practice data using FHIR resources\n- **Registered Queries** – Execute recurring SQL queries against practice databases\n\nFor more information about Halo Connect, visit our [website](https://haloconnect.io) or [blog](https://haloconnect.io/blog).\n\n## Prerequisites\n\nAll API endpoints require an active pairing with the target site. Use the [Pair with a site](#operation/Integrator_PairSite) endpoint to establish access before making queries.\n\n## Definitions\n\nFor detailed documentation and guides, see our [documentation portal](https://docs.haloconnect.io).\n\n- **Site:** An instance of Halo Link connected to a practice's PMS database.\n- **Halo GUID:** A unique identifier for a site, used by Halo Connect to route queries.\n- **PMS:** Practice Management Software.\n- **PMS ID:** The identifier assigned to a site by the PMS vendor.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.haloconnect.io",
+      "description": "Production"
+    },
+    {
+      "url": "https://api.stage.haloconnect.io",
+      "description": "Stage"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Sites",
+      "description": "Endpoints for practice onboarding and site metadata."
+    },
+    {
+      "name": "SQL Passthrough",
+      "description": "Send SQL queries to practices as immediate, async or registered queries.\n\n**Immediate queries** are small, time-sensitive queries that return a result in seconds. Response size is limited to 8MB.\n\n**Async queries** are queued for execution and results can be retrieved later. The workflow is:\n\n  1. **Submit async query** – Creates a query and returns a `queryId` on success.\n  2. **Get query status** – Check query status. When complete, includes pagination details.\n  3. **Get query result page** – Retrieve result pages using the pagination info from the status response.\n\n**Registered Queries** are also supported. See the [Registered Queries](#tag/Registered-Queries) section for more information.\n"
+    },
+    {
+      "name": "FHIR",
+      "description": "Query practices using FHIR resources."
+    },
+    {
+      "name": "Registered Queries",
+      "description": "Recurring queries that run at a specified frequency, and can be used to monitor for updates or new records. This type is recommended for polling use cases."
+    }
+  ],
+  "paths": {
+    "/integrator/sites/{siteId}/queries/immediate": {
+      "post": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Execute immediate query",
+        "description": "Send an immediate query to a site and receive the result in the response.\n\nQuery status can also be retrieved using the **GET Query status** endpoint.\n",
+        "operationId": "createImmediateQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200ImmediateQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400ErrorForIntegratorQuery"
+          },
+          "401": {
+            "$ref": "#/components/responses/401ErrorForIntegratorQuery"
+          },
+          "403": {
+            "$ref": "#/components/responses/403ErrorForIntegratorQuery"
+          },
+          "404": {
+            "$ref": "#/components/responses/404ErrorForIntegratorQuery"
+          },
+          "500": {
+            "$ref": "#/components/responses/500ErrorForIntegratorQuery"
+          },
+          "503": {
+            "$ref": "#/components/responses/503ErrorForIntegratorQuery"
+          },
+          "504": {
+            "$ref": "#/components/responses/504ErrorForIntegratorQuery"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/commandBySiteImmediatePostReqBody"
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/async": {
+      "post": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Submit async query",
+        "description": "Queue an async query for execution. Use the **GET Query status** endpoint to check progress and retrieve pagination details for results.",
+        "operationId": "createAsyncQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/201AsyncQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/503Error"
+          },
+          "504": {
+            "$ref": "#/components/responses/504Error"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/commandBySiteAsyncPostReqBody"
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/registered": {
+      "post": {
+        "tags": [
+          "Registered Queries"
+        ],
+        "summary": "Create registered query",
+        "description": "Create a registered query to be queued for execution.",
+        "operationId": "createRegisteredQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "$ref": "#/components/responses/202RegisteredQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RegisteredPostReqBody"
+        }
+      },
+      "get": {
+        "tags": [
+          "Registered Queries"
+        ],
+        "summary": "List registered queries",
+        "description": "List all registered queries that are currently active and queued for execution.",
+        "operationId": "getRegisteredQueries",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200GetRegisteredQueries"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/registered/{queryId}": {
+      "get": {
+        "tags": [
+          "Registered Queries"
+        ],
+        "summary": "Get registered query details",
+        "description": "Get the details of a registered query.",
+        "operationId": "getRegisteredQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200RegisteredQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Registered Queries"
+        ],
+        "summary": "Cancel registered query",
+        "description": "Cancel a registered query that is currently queued for execution.",
+        "operationId": "cancelRegisteredQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204RegisteredQueryDelete"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/registered/{queryId}/results": {
+      "get": {
+        "tags": [
+          "Registered Queries"
+        ],
+        "summary": "Get registered query results",
+        "description": "Get the result of a registered query that has completed execution.",
+        "operationId": "getRegisteredQueryResult",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200RegisteredQueryResult"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/{queryId}": {
+      "get": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Get query status",
+        "description": "Check the status of an immediate or async query.\n\nFor async queries, successful responses include a `results` object with pagination details for retrieving result pages. Immediate queries do not include pagination since results are returned with the initial request.\n",
+        "operationId": "getQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200IntegratorGetQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/status": {
+      "post": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Get batch query status",
+        "description": "Returns the status of the specified queries for a site. Submit an array of query IDs in the request body to retrieve their current status.\n\nEach result indicates whether the query was found or not found, and includes the full query details when found.\n",
+        "operationId": "getQueryStatusBatch",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/QueryStatusBatchReqBody"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200GetQueryStatusBatch"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/{queryId}/results/{pageNumber}": {
+      "get": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Get query result page",
+        "description": "Get a result page from a successful async query.",
+        "operationId": "getResultPage",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          },
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200GetResultPage"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "410": {
+            "$ref": "#/components/responses/410Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/queries/{queryId}/results/{pageNumber}/stream": {
+      "get": {
+        "tags": [
+          "SQL Passthrough"
+        ],
+        "summary": "Stream result page",
+        "operationId": "streamResultPage",
+        "description": "Streams the JSON content of a single page of query results. This is useful for large result sets that are paginated and delivered as streamed responses to reduce memory usage.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/QueryId"
+          },
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200StreamResultPage"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "410": {
+            "$ref": "#/components/responses/410Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/fhir/R4/{fhirParameters}": {
+      "get": {
+        "tags": [
+          "FHIR"
+        ],
+        "summary": "Search FHIR resources",
+        "description": "Send a FHIR query to a site and receive the result in the response.\n\nInclude the resource name and search parameters in `fhirParameters`. Example: `Patient?given=John`\n\nSee the [FHIR API docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters.\n",
+        "operationId": "getFhirQuery",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/FhirParameters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200FhirQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400ErrorForFhirQuery"
+          },
+          "401": {
+            "$ref": "#/components/responses/401ErrorForFhirQuery"
+          },
+          "403": {
+            "$ref": "#/components/responses/403ErrorForFhirQuery"
+          },
+          "404": {
+            "$ref": "#/components/responses/404ErrorForFhirQuery"
+          },
+          "500": {
+            "$ref": "#/components/responses/500ErrorForFhirQuery"
+          },
+          "503": {
+            "$ref": "#/components/responses/503ErrorForFhirQuery"
+          },
+          "504": {
+            "$ref": "#/components/responses/504ErrorForFhirQuery"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}/fhir/R4/{resource}/_search": {
+      "post": {
+        "tags": [
+          "FHIR"
+        ],
+        "summary": "Search FHIR resources (POST)",
+        "description": "Send a FHIR search query with parameters in the request body.\n\nPOST is recommended for sensitive queries containing personally identifiable information (PII), as it avoids URL length limits and keeps parameters out of logs.\n\nSee the [FHIR API docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters. Errors may return as HTTP errors or FHIR [OperationOutcome](https://hl7.org/fhir/R4/operationoutcome.html) resources.\n",
+        "operationId": "postFhirSearch",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          },
+          {
+            "$ref": "#/components/parameters/FhirResource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200FhirSearch"
+          },
+          "400": {
+            "$ref": "#/components/responses/400ErrorForFhirQuery"
+          },
+          "401": {
+            "$ref": "#/components/responses/401ErrorForFhirQuery"
+          },
+          "403": {
+            "$ref": "#/components/responses/403ErrorForFhirQuery"
+          },
+          "404": {
+            "$ref": "#/components/responses/404ErrorForFhirQuery"
+          },
+          "500": {
+            "$ref": "#/components/responses/500ErrorForFhirQuery"
+          },
+          "503": {
+            "$ref": "#/components/responses/503ErrorForFhirQuery"
+          },
+          "504": {
+            "$ref": "#/components/responses/504ErrorForFhirQuery"
+          }
+        },
+        "requestBody": {
+          "description": "FHIR search parameters.",
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "given": "John",
+                "birthdate": "gt1900-01-01",
+                "_sort": "birthdate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrator/pair-site": {
+      "post": {
+        "tags": [
+          "Sites"
+        ],
+        "summary": "Pair with a site",
+        "description": "Pair with a site to enable API access. Best Practice sites require a pairing code generated by the practice. Pairing is still required for other PMS types, but no pairing code is needed.",
+        "operationId": "Integrator_PairSite",
+        "parameters": [
+          {
+            "name": "practiceManagementSiteId",
+            "in": "query",
+            "description": "The PMS ID of the site to pair with.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 12345
+            }
+          },
+          {
+            "name": "practiceManagementName",
+            "in": "query",
+            "description": "The name of the Practice Management Software used by the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Best Practice",
+                "Zedmed",
+                "D4w"
+              ],
+              "example": "Best Practice"
+            }
+          },
+          {
+            "name": "pairingCode",
+            "in": "query",
+            "description": "A pairing code generated by the practice. Required for Best Practice sites only.",
+            "schema": {
+              "type": "string",
+              "example": "ABC123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200IntegratorGetSite"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          },
+          "502": {
+            "$ref": "#/components/responses/502Error"
+          }
+        }
+      }
+    },
+    "/integrator/pairSite": {
+      "post": {
+        "tags": [
+          "Sites"
+        ],
+        "summary": "Pair with a site (deprecated)",
+        "description": "**Deprecated:** Use `/integrator/pair-site` instead. Pair with a site to enable API access. Best Practice sites require a pairing code generated by the practice. Pairing is still required for other PMS types, but no pairing code is needed.",
+        "deprecated": true,
+        "operationId": "pairSite",
+        "parameters": [
+          {
+            "name": "practiceManagementSiteId",
+            "in": "query",
+            "description": "The PMS ID of the site to pair with.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 12345
+            }
+          },
+          {
+            "name": "practiceManagementName",
+            "in": "query",
+            "description": "The name of the Practice Management Software used by the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Best Practice",
+                "Zedmed",
+                "D4w"
+              ],
+              "example": "Best Practice"
+            }
+          },
+          {
+            "name": "pairingCode",
+            "in": "query",
+            "description": "A pairing code generated by the practice. Required for Best Practice sites only.",
+            "schema": {
+              "type": "string",
+              "example": "ABC123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200IntegratorGetSite"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          },
+          "502": {
+            "$ref": "#/components/responses/502Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites": {
+      "get": {
+        "tags": [
+          "Sites"
+        ],
+        "summary": "Find sites by PMS ID",
+        "description": "Retrieve Halo GUIDs for sites matching the query parameters. Use this to exchange a known PMS ID for the corresponding Halo GUID.",
+        "operationId": "getSites",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PracticeManagementSiteIdRequired"
+          },
+          {
+            "$ref": "#/components/parameters/PracticeManagementName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200IntegratorGetSites"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    },
+    "/integrator/sites/{siteId}": {
+      "get": {
+        "tags": [
+          "Sites"
+        ],
+        "summary": "Get site status",
+        "description": "Check the status of a site using its Halo GUID.",
+        "operationId": "getSite",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SiteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200IntegratorGetSite"
+          },
+          "400": {
+            "$ref": "#/components/responses/400Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/401Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/403Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/404Error"
+          },
+          "500": {
+            "$ref": "#/components/responses/500Error"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "SubscriptionKey": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "SubscriptionKey": {
+        "type": "apiKey",
+        "name": "Ocp-Apim-Subscription-Key",
+        "in": "header",
+        "description": "The subscription key for the API."
+      }
+    },
+    "parameters": {
+      "SiteId": {
+        "name": "siteId",
+        "in": "path",
+        "description": "Halo GUID of the site.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "QueryId": {
+        "name": "queryId",
+        "in": "path",
+        "description": "Id of the query.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "PageNumber": {
+        "name": "pageNumber",
+        "in": "path",
+        "description": "Page number of the results for a query.",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "FhirParameters": {
+        "name": "fhirParameters",
+        "in": "path",
+        "description": "Resource names and search parameters per the R4 FHIR specification for using [RESTful APIs](http://hl7.org/fhir/R4/http.html) and [search](http://hl7.org/fhir/R4/search.html).",
+        "schema": {
+          "type": "string"
+        },
+        "required": true
+      },
+      "FhirResource": {
+        "name": "resource",
+        "in": "path",
+        "description": "The name of the FHIR resource to search for.",
+        "schema": {
+          "type": "string"
+        },
+        "required": true
+      },
+      "PracticeManagementSiteIdRequired": {
+        "name": "practiceManagementSiteId",
+        "in": "query",
+        "description": "Filters by the PMS Site Id.",
+        "schema": {
+          "type": "string"
+        },
+        "required": true
+      },
+      "PracticeManagementName": {
+        "name": "practiceManagementName",
+        "in": "query",
+        "description": "Filters by the name of the Practice Management Software used by the site.",
+        "schema": {
+          "$ref": "#/components/schemas/PracticeManagementName"
+        },
+        "required": true
+      }
+    },
+    "schemas": {
+      "ImmediateMaxTimeInQueue": {
+        "type": "integer",
+        "format": "milli-seconds",
+        "example": 15000,
+        "minimum": 0,
+        "maximum": 60000,
+        "default": 30000
+      },
+      "ExecutionMode": {
+        "description": "Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.",
+        "type": "string",
+        "enum": [
+          "reader",
+          "nonQuery",
+          "scalar"
+        ],
+        "default": "reader"
+      },
+      "CommandType": {
+        "description": "Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.",
+        "type": "string",
+        "enum": [
+          "text",
+          "storedProcedure"
+        ],
+        "default": "text"
+      },
+      "Direction": {
+        "description": "A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.",
+        "type": "string",
+        "enum": [
+          "output",
+          "input",
+          "inputOutput",
+          "returnValue"
+        ]
+      },
+      "Type": {
+        "description": "Specifies SQL Server-specific data type of a field, property.",
+        "type": "string",
+        "enum": [
+          "BigInt",
+          "Binary",
+          "Bit",
+          "Char",
+          "String",
+          "Date",
+          "DateTime",
+          "DateTime2",
+          "DateTimeOffset",
+          "Decimal",
+          "Float",
+          "Image",
+          "Int",
+          "Money",
+          "NChar",
+          "NText",
+          "NVarChar",
+          "Real",
+          "SmallDateTime",
+          "SmallInt",
+          "SmallMoney",
+          "Structured",
+          "Text",
+          "Time",
+          "Timestamp",
+          "TinyInt",
+          "Udt",
+          "UniqueIdentifier",
+          "VarBinary",
+          "VarChar",
+          "Variant",
+          "Xml"
+        ]
+      },
+      "Value": {
+        "description": "Gets or sets the value of the parameter.",
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "base64 (output)",
+        "example": "66"
+      },
+      "Size": {
+        "description": "The maximum size, in bytes, of the data within the column.",
+        "type": "integer",
+        "example": 43
+      },
+      "Parameter": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "@siteid",
+            "description": "The name of the parameter."
+          },
+          "direction": {
+            "$ref": "#/components/schemas/Direction"
+          },
+          "type": {
+            "$ref": "#/components/schemas/Type"
+          },
+          "value": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          }
+        }
+      },
+      "Command": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "GetPatientID",
+            "description": "The SQL statement to execute or the name of the stored procedure to run."
+          },
+          "executionMode": {
+            "$ref": "#/components/schemas/ExecutionMode"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CommandType"
+          },
+          "parameters": {
+            "type": "array",
+            "description": "Parameters are used to supply data to, or read outputs from, a stored procedure.",
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            }
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "Catalogue": {
+        "type": "string",
+        "example": "Patients",
+        "description": "Indicates which database to run against. If no catalogue is specified a default catalogue will be chosen instead. Supported for all PMS with multiple databases. Database catalogues, including the default catalogue, can be identified from the catalogue.name property returned by the Site API endpoints, and are consistent across all sites of a single PMS type."
+      },
+      "ImmediateCommand": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "maxTimeInQueue": {
+                "$ref": "#/components/schemas/ImmediateMaxTimeInQueue"
+              },
+              "command": {
+                "$ref": "#/components/schemas/Command"
+              },
+              "catalogue": {
+                "$ref": "#/components/schemas/Catalogue"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          }
+        ]
+      },
+      "Id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the entity."
+      },
+      "IntegratorId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Id of the Integrator that created the query."
+      },
+      "SiteId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Halo GUID of the site."
+      },
+      "CommandSize": {
+        "type": "integer",
+        "example": 98
+      },
+      "RequestSize": {
+        "type": "integer",
+        "example": 98
+      },
+      "Date": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "ImmediateQuery": {
+        "type": "object",
+        "required": [
+          "id",
+          "integratorId",
+          "siteId",
+          "mode",
+          "status",
+          "maxTimeInQueue",
+          "commandSize",
+          "createdAt",
+          "updatedAt",
+          "requestSize"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "integratorId": {
+            "$ref": "#/components/schemas/IntegratorId"
+          },
+          "siteId": {
+            "$ref": "#/components/schemas/SiteId"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "immediate"
+            ]
+          },
+          "maxTimeInQueue": {
+            "$ref": "#/components/schemas/ImmediateMaxTimeInQueue"
+          },
+          "commandSize": {
+            "$ref": "#/components/schemas/CommandSize"
+          },
+          "requestSize": {
+            "$ref": "#/components/schemas/RequestSize"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/Date"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        }
+      },
+      "StatusTimingImmediate": {
+        "type": "object",
+        "description": "The server time (UTC) at which a query entered and exited the various states.",
+        "properties": {
+          "initialising": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            },
+            "required": [
+              "startTime"
+            ]
+          },
+          "executing": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          },
+          "downloading": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          },
+          "uploading": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          }
+        },
+        "required": [
+          "initialising",
+          "executing"
+        ]
+      },
+      "QueryMetrics": {
+        "type": "object",
+        "required": [
+          "sqlExecutionDuration"
+        ],
+        "properties": {
+          "sqlExecutionDuration": {
+            "type": "integer",
+            "example": 1000,
+            "description": "The number of milli-seconds from when Halo Link Service sends a query to the database until it gets a response."
+          }
+        }
+      },
+      "Data": {
+        "type": "string",
+        "format": "base64",
+        "description": "Result data that is base64 encoded returned from the executed query.",
+        "example": "e2lk..."
+      },
+      "QueryResult": {
+        "type": "object",
+        "required": [
+          "rows",
+          "size",
+          "data"
+        ],
+        "properties": {
+          "rows": {
+            "type": "integer",
+            "example": 30
+          },
+          "size": {
+            "type": "integer",
+            "example": 25
+          },
+          "data": {
+            "$ref": "#/components/schemas/Data"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            }
+          }
+        }
+      },
+      "NonQueryResult": {
+        "type": "object",
+        "required": [
+          "rowsAffected",
+          "size"
+        ],
+        "properties": {
+          "rowsAffected": {
+            "type": "integer",
+            "example": 30
+          },
+          "size": {
+            "type": "integer",
+            "example": 25
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            }
+          }
+        }
+      },
+      "ResultSize": {
+        "type": "integer",
+        "example": 98
+      },
+      "SuccessfulImmediateQueryProperties": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "successful"
+            ]
+          },
+          "statusTiming": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusTimingImmediate"
+              }
+            ]
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/QueryMetrics"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/QueryResult"
+              },
+              {
+                "$ref": "#/components/schemas/NonQueryResult"
+              }
+            ]
+          },
+          "resultSize": {
+            "$ref": "#/components/schemas/ResultSize"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "metrics",
+          "result",
+          "completedAt"
+        ]
+      },
+      "SuccessfulImmediateQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ImmediateQuery"
+          },
+          {
+            "$ref": "#/components/schemas/SuccessfulImmediateQueryProperties"
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "format": "httpStatus"
+              },
+              "statusText": {
+                "type": "string",
+                "format": "httpStatusPhrase"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "StatusTiming": {
+        "type": "object",
+        "description": "The server time (UTC) at which a query entered and exited the various states.",
+        "properties": {
+          "initialising": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              },
+              "endTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            },
+            "required": [
+              "startTime"
+            ]
+          },
+          "queued": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              },
+              "endTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          },
+          "executing": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              },
+              "endTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          },
+          "uploading": {
+            "properties": {
+              "startTime": {
+                "$ref": "#/components/schemas/Date"
+              },
+              "endTime": {
+                "$ref": "#/components/schemas/Date"
+              }
+            }
+          }
+        },
+        "required": [
+          "initialising"
+        ]
+      },
+      "QueryExecutionFailErrorType": {
+        "type": "string",
+        "enum": [
+          "http",
+          "mssql",
+          "fbsql",
+          "haloLink"
+        ]
+      },
+      "ErrorDetails": {
+        "type": "object",
+        "properties": {
+          "errorType": {
+            "$ref": "#/components/schemas/QueryExecutionFailErrorType"
+          },
+          "errorCode": {
+            "type": "integer"
+          },
+          "errorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "FailedQueryErrorPropertiesV2": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "executionFailed"
+            ]
+          },
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming",
+            "example": {
+              "statusTiming": {
+                "initialising": {
+                  "startTime": "2019-08-24T14:15:22.847Z"
+                },
+                "executing": {
+                  "startTime": "2019-08-24T14:15:22.847Z"
+                }
+              }
+            }
+          },
+          "errorCode": {
+            "deprecated": true,
+            "type": "integer"
+          },
+          "errorMessage": {
+            "deprecated": true,
+            "type": "string"
+          },
+          "errorDetails": {
+            "$ref": "#/components/schemas/ErrorDetails"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        }
+      },
+      "ExecutionFailedImmediateQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ImmediateQuery"
+          },
+          {
+            "$ref": "#/components/schemas/FailedQueryErrorPropertiesV2"
+          }
+        ]
+      },
+      "AsyncMaxTimeInQueue": {
+        "type": "integer",
+        "format": "milli-seconds",
+        "example": 900000,
+        "minimum": 0,
+        "maximum": 7200000,
+        "default": 3600000
+      },
+      "AsyncCommand": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "maxTimeInQueue": {
+                "$ref": "#/components/schemas/AsyncMaxTimeInQueue"
+              },
+              "command": {
+                "$ref": "#/components/schemas/Command"
+              },
+              "catalogue": {
+                "$ref": "#/components/schemas/Catalogue"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          }
+        ]
+      },
+      "AsyncQueryInitialised": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQuery"
+          },
+          {
+            "$ref": "#/components/schemas/InitialisedAsyncQueryProperties"
+          }
+        ]
+      },
+      "QueuedAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          }
+        },
+        "required": [
+          "statusTiming"
+        ],
+        "example": {
+          "statusTiming": {
+            "initialising": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            },
+            "queued": {
+              "startTime": "2019-08-24T14:15:22.847Z"
+            }
+          }
+        }
+      },
+      "AsyncQueryQueued": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryInitialised"
+          },
+          {
+            "$ref": "#/components/schemas/QueuedAsyncQueryProperties"
+          }
+        ]
+      },
+      "ExecutingAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          }
+        },
+        "required": [
+          "statusTiming"
+        ],
+        "example": {
+          "statusTiming": {
+            "queued": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            },
+            "executing": {
+              "startTime": "2019-08-24T14:15:22.847Z"
+            }
+          }
+        }
+      },
+      "AsyncQueryExecuting": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryQueued"
+          },
+          {
+            "$ref": "#/components/schemas/ExecutingAsyncQueryProperties"
+          }
+        ]
+      },
+      "UploadingAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/QueryMetrics"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "metrics"
+        ],
+        "example": {
+          "statusTiming": {
+            "executing": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            },
+            "uploading": {
+              "startTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "metrics": {
+            "sqlExecutionDuration": 1000
+          }
+        }
+      },
+      "AsyncQueryUploading": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryExecuting"
+          },
+          {
+            "$ref": "#/components/schemas/UploadingAsyncQueryProperties"
+          }
+        ]
+      },
+      "ResultPageStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "uploading",
+          "cached"
+        ],
+        "default": "queued"
+      },
+      "Rows": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 10
+          },
+          "rangeStart": {
+            "type": "integer",
+            "example": 1
+          },
+          "rangeEnd": {
+            "type": "integer",
+            "example": 11
+          }
+        }
+      },
+      "Page": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "example": 1
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultPageStatus"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "rows": {
+            "$ref": "#/components/schemas/Rows"
+          }
+        }
+      },
+      "AsyncQueryResult": {
+        "type": "object",
+        "required": [
+          "rows",
+          "size",
+          "pages"
+        ],
+        "properties": {
+          "rows": {
+            "type": "integer",
+            "example": 30
+          },
+          "size": {
+            "type": "integer",
+            "example": 25
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Page"
+            }
+          }
+        }
+      },
+      "AsyncNonQueryResult": {
+        "type": "object",
+        "required": [
+          "rowsAffected",
+          "size",
+          "pages"
+        ],
+        "properties": {
+          "rowsAffected": {
+            "type": "integer",
+            "example": 30
+          },
+          "size": {
+            "type": "integer",
+            "example": 25
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Page"
+            }
+          }
+        }
+      },
+      "SuccessfulAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "$ref": "#/components/schemas/QueryMetrics"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AsyncQueryResult"
+              },
+              {
+                "$ref": "#/components/schemas/AsyncNonQueryResult"
+              }
+            ]
+          },
+          "resultSize": {
+            "$ref": "#/components/schemas/ResultSize"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "metrics",
+          "result",
+          "resultSize"
+        ]
+      },
+      "AsyncQuerySuccessful": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryUploading"
+          },
+          {
+            "$ref": "#/components/schemas/SuccessfulAsyncQueryProperties"
+          }
+        ]
+      },
+      "InitialisationFailedAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "completedAt"
+        ],
+        "example": {
+          "statusTiming": {
+            "initialising": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "completedAt": "2019-08-24T14:15:22.847Z"
+        }
+      },
+      "AsyncQueryInitialisationFailed": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryInitialised"
+          },
+          {
+            "$ref": "#/components/schemas/InitialisationFailedAsyncQueryProperties"
+          }
+        ]
+      },
+      "ExpiredInQueueAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "completedAt"
+        ],
+        "example": {
+          "statusTiming": {
+            "queued": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "completedAt": "2019-08-24T14:15:22.847Z"
+        }
+      },
+      "AsyncQueryExpiredInQueue": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryQueued"
+          },
+          {
+            "$ref": "#/components/schemas/ExpiredInQueueAsyncQueryProperties"
+          }
+        ]
+      },
+      "ExecutionFailedAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "completedAt"
+        ],
+        "example": {
+          "statusTiming": {
+            "executing": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "completedAt": "2019-08-24T14:15:22.847Z"
+        }
+      },
+      "FailedQueryErrorProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "errorMessage": {
+            "type": "string",
+            "example": "Request body doesn't contain correct schema"
+          }
+        },
+        "required": [
+          "errorCode",
+          "errorMessage"
+        ],
+        "example": {
+          "statusTiming": {
+            "initialising": {
+              "startTime": "2019-08-24T14:15:22.847Z",
+              "endTime": "2019-08-24T14:15:22.847Z"
+            },
+            "executing": {
+              "startTime": "2019-08-24T14:15:22.847Z",
+              "endTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "errorCode": 0,
+          "errorMessage": "Request body doesn't contain correct schema"
+        }
+      },
+      "AsyncQueryExecutionFailed": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryExecuting"
+          },
+          {
+            "$ref": "#/components/schemas/ExecutionFailedAsyncQueryProperties"
+          },
+          {
+            "$ref": "#/components/schemas/FailedQueryErrorProperties"
+          }
+        ]
+      },
+      "UploadFailedAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          },
+          "completedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        },
+        "required": [
+          "statusTiming",
+          "completedAt"
+        ],
+        "example": {
+          "statusTiming": {
+            "uploading": {
+              "endTime": "2019-08-24T14:15:22.847Z"
+            }
+          },
+          "completedAt": "2019-08-24T14:15:22.847Z"
+        }
+      },
+      "AsyncQueryUploadFailed": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AsyncQueryUploading"
+          },
+          {
+            "$ref": "#/components/schemas/UploadFailedAsyncQueryProperties"
+          },
+          {
+            "$ref": "#/components/schemas/FailedQueryErrorProperties"
+          }
+        ]
+      },
+      "AsyncQueryStatus": {
+        "description": "Status `initialisationFailedSiteOffline` means query failed as the site closed session. `initialisationFailedSiteUnreachable` means site hasn't contacted two minutes.",
+        "type": "string",
+        "enum": [
+          "initialising",
+          "initialisationFailedCacheError",
+          "initialisationFailedSiteOffline",
+          "initialisationFailedSiteUnreachable",
+          "queued",
+          "expiredInQueue",
+          "executing",
+          "executionFailed",
+          "uploading",
+          "uploadFailed",
+          "successful"
+        ]
+      },
+      "AsyncQuery": {
+        "type": "object",
+        "required": [
+          "id",
+          "integratorId",
+          "siteId",
+          "mode",
+          "status",
+          "maxTimeInQueue",
+          "commandSize",
+          "requestSize",
+          "createdAt",
+          "updatedAt"
+        ],
+        "discriminator": {
+          "propertyName": "status",
+          "mapping": {
+            "successful": "#/components/schemas/AsyncQuerySuccessful",
+            "initialising": "#/components/schemas/AsyncQueryInitialised",
+            "initialisationFailedCacheError": "#/components/schemas/AsyncQueryInitialisationFailed",
+            "initialisationFailedSiteOffline": "#/components/schemas/AsyncQueryInitialisationFailed",
+            "initialisationFailedSiteUnreachable": "#/components/schemas/AsyncQueryInitialisationFailed",
+            "queued": "#/components/schemas/AsyncQueryQueued",
+            "expiredInQueue": "#/components/schemas/AsyncQueryExpiredInQueue",
+            "executing": "#/components/schemas/AsyncQueryExecuting",
+            "executionFailed": "#/components/schemas/AsyncQueryExecutionFailed",
+            "uploading": "#/components/schemas/AsyncQueryUploading",
+            "uploadFailed": "#/components/schemas/AsyncQueryUploadFailed"
+          }
+        },
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "integratorId": {
+            "$ref": "#/components/schemas/IntegratorId"
+          },
+          "siteId": {
+            "$ref": "#/components/schemas/SiteId"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "async"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/AsyncQueryStatus"
+          },
+          "maxTimeInQueue": {
+            "$ref": "#/components/schemas/AsyncMaxTimeInQueue"
+          },
+          "commandSize": {
+            "$ref": "#/components/schemas/CommandSize"
+          },
+          "requestSize": {
+            "$ref": "#/components/schemas/RequestSize"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/Date"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/Date"
+          }
+        }
+      },
+      "InitialisedAsyncQueryProperties": {
+        "type": "object",
+        "properties": {
+          "statusTiming": {
+            "$ref": "#/components/schemas/StatusTiming"
+          }
+        },
+        "required": [
+          "statusTiming"
+        ],
+        "example": {
+          "statusTiming": {
+            "initialising": {
+              "startTime": "2019-08-24T14:15:22.847Z"
+            }
+          }
+        }
+      },
+      "RegisteredQueryStatus": {
+        "type": "string",
+        "enum": [
+          "initialisationFailedCacheError",
+          "enabled",
+          "cancelled",
+          "completed"
+        ]
+      },
+      "RegisteredQueryMetrics": {
+        "type": "object",
+        "properties": {
+          "lastSucceededAt": {
+            "type": "string"
+          },
+          "lastFailedAt": {
+            "type": "string"
+          },
+          "lastExecutionDuration": {
+            "type": "integer"
+          },
+          "executionSucceededCount": {
+            "type": "integer"
+          },
+          "executionFailedCount": {
+            "type": "integer"
+          },
+          "resultSizeSum": {
+            "type": "integer"
+          },
+          "requestSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "RegisteredQuery": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "registeredQueryType",
+          "status",
+          "frequency",
+          "duration",
+          "createdAt",
+          "metrics"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string",
+            "description": "Customer set identifier for this registered query."
+          },
+          "registeredQueryType": {
+            "type": "string",
+            "enum": [
+              "query"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/RegisteredQueryStatus"
+          },
+          "frequency": {
+            "type": "integer",
+            "description": "Seconds between each query execution.",
+            "example": 300
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in seconds the query will run for. Up to 86400 seconds (24 hours).",
+            "example": 43200
+          },
+          "lastHash": {
+            "type": "string",
+            "description": "Hash of the last successful query result. Present only when the run completes successfully; otherwise empty."
+          },
+          "lastErrorDetails": {
+            "description": "Details of the last error thrown by running the registered query. Only populated if the query errors.",
+            "$ref": "#/components/schemas/ErrorDetails"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/RegisteredQueryMetrics"
+          },
+          "createdAt": {
+            "description": "When the registered query was created.",
+            "$ref": "#/components/schemas/Date"
+          },
+          "completedAt": {
+            "description": "When the registered query completed. Only populated on completion.",
+            "$ref": "#/components/schemas/Date"
+          }
+        }
+      },
+      "RegisteredQueryPostReq": {
+        "type": "object",
+        "required": [
+          "name",
+          "registeredQueryType",
+          "frequency",
+          "duration",
+          "registerCommand"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Customer set identifier for this registered query."
+          },
+          "registeredQueryType": {
+            "type": "string",
+            "enum": [
+              "query"
+            ]
+          },
+          "frequency": {
+            "type": "integer",
+            "description": "Seconds between each query execution.",
+            "example": 300
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in seconds the query will run for. Up to 86400 seconds (24 hours).",
+            "example": 43200
+          },
+          "registerCommand": {
+            "type": "object",
+            "description": "Command to be executed by the registered query.",
+            "properties": {
+              "command": {
+                "$ref": "#/components/schemas/Command"
+              }
+            }
+          }
+        }
+      },
+      "RegisteredQueryId": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          }
+        }
+      },
+      "RegisteredQueryResult": {
+        "type": "object",
+        "required": [
+          "data",
+          "parameters",
+          "rows",
+          "size"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Data"
+          },
+          "parameters": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            }
+          },
+          "rows": {
+            "type": "integer",
+            "example": 12
+          },
+          "size": {
+            "type": "integer",
+            "example": 25
+          }
+        }
+      },
+      "QueryStatusBatchResultStatus": {
+        "type": "string",
+        "enum": [
+          "found",
+          "notFound"
+        ]
+      },
+      "QueryStatusBatchResult": {
+        "type": "object",
+        "required": [
+          "queryId",
+          "status"
+        ],
+        "properties": {
+          "queryId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/QueryStatusBatchResultStatus"
+          },
+          "query": {
+            "$ref": "#/components/schemas/AsyncQuery"
+          }
+        }
+      },
+      "FhirResource": {
+        "type": "object",
+        "description": "Singular FHIR resource of the requested type.",
+        "example": {
+          "application/json": {
+            "resourceType": "Patient",
+            "id": "1",
+            "name": [
+              {
+                "use": "official",
+                "text": "Mr John Smith",
+                "family": "Smith",
+                "given": [
+                  "John"
+                ],
+                "prefix": [
+                  "Mr"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "FhirBundle": {
+        "type": "object",
+        "description": "Bundle of FHIR resources of the requested type(s).",
+        "example": {
+          "application/json": {
+            "resourceType": "Bundle",
+            "type": "searchset",
+            "total": 0
+          }
+        }
+      },
+      "OperationOutcome": {
+        "type": "object",
+        "description": "OperationOutcome resource containing error details.",
+        "example": {
+          "application/json": {
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "fatal",
+                "code": "exception",
+                "details": {
+                  "coding": [
+                    {
+                      "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                      "code": "5003"
+                    }
+                  ],
+                  "text": "Details of error"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "PMSType": {
+        "enum": [
+          "BestPractice",
+          "Zedmed",
+          "D4w"
+        ],
+        "example": "BestPractice",
+        "description": "The name of the practice management software."
+      },
+      "SiteAvailability": {
+        "type": "string",
+        "description": "Availability of the site based on time last heard from the site.",
+        "enum": [
+          "online",
+          "offline",
+          "unreachable"
+        ]
+      },
+      "SiteStatus": {
+        "type": "string",
+        "description": "Status of the site.",
+        "enum": [
+          "initialising",
+          "active",
+          "removed",
+          "uninstalled"
+        ]
+      },
+      "HaloLinkVersion": {
+        "type": "string",
+        "format": "version",
+        "description": "Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]",
+        "example": "22.1207.209"
+      },
+      "SiteCatalogues": {
+        "type": "array",
+        "description": "List of catalogues (databases) available for the site.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Patients",
+              "description": "The name of the catalogue that can be queried."
+            },
+            "isDefault": {
+              "type": "boolean",
+              "example": true,
+              "description": "If no catalogue is specified in the Query POST, the default catalogue will be used."
+            }
+          }
+        }
+      },
+      "PracticeMetadata": {
+        "type": "object",
+        "properties": {
+          "pmsType": {
+            "$ref": "#/components/schemas/PMSType"
+          },
+          "practiceName": {
+            "type": "string",
+            "example": "Halo Clinic South",
+            "description": "The name of the practice."
+          },
+          "practiceManagementSiteId": {
+            "type": "string",
+            "format": "string",
+            "example": "12345",
+            "description": "The siteId of the practice management software."
+          },
+          "practiceManagementVersion": {
+            "type": "string",
+            "example": "3.4.1",
+            "description": "The version of the practice management software."
+          }
+        }
+      },
+      "SiteForIntegrator": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/SiteId"
+          },
+          "pmsType": {
+            "$ref": "#/components/schemas/PMSType"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/SiteAvailability"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SiteStatus"
+          },
+          "haloLinkVersion": {
+            "$ref": "#/components/schemas/HaloLinkVersion"
+          },
+          "enrichedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the PracticeMetadata was last enriched from the Site, as a DateTime in UTC."
+          },
+          "catalogue": {
+            "$ref": "#/components/schemas/SiteCatalogues"
+          },
+          "practiceMetadata": {
+            "$ref": "#/components/schemas/PracticeMetadata"
+          },
+          "name": {
+            "deprecated": true,
+            "type": "string",
+            "description": "Name of the site.",
+            "example": "Halo Clinic"
+          },
+          "practiceManagementSiteId": {
+            "deprecated": true,
+            "type": "string",
+            "description": "Id of the site as issued by the practice management software."
+          },
+          "practiceManagementName": {
+            "deprecated": true,
+            "type": "string",
+            "description": "Name of the practice management software.",
+            "enum": [
+              "Best Practice",
+              "Zedmed",
+              "D4w"
+            ]
+          },
+          "practiceManagementVersion": {
+            "deprecated": true,
+            "type": "string",
+            "description": "Version of the practice management software when Halo Link was installed. Note this will not change when the practice management software is updated.",
+            "example": "3.4.1"
+          },
+          "createdAt": {
+            "deprecated": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          "authoritative": {
+            "deprecated": true,
+            "type": "boolean",
+            "description": "In the case there are multiple sites configured with the same Practice Management Software Site Id, only one of the sites is registered in Halo Connect as the authoritative site. This is the production site to which queries are normally routed. Non-authoritative sites may be used by practices as backups, for testing or temporarily during migrations.",
+            "example": true
+          },
+          "clientTimestampUTC": {
+            "deprecated": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "Last updated time on a site. Date in UTC.",
+            "example": "2022-12-25T12:25:01Z"
+          },
+          "heartbeatTimestampUTC": {
+            "deprecated": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "Last updated time on Halo Api server. Date in UTC.",
+            "example": "2022-12-25T12:25:01Z"
+          }
+        }
+      },
+      "PracticeManagementName": {
+        "type": "string",
+        "description": "Name of the practice management software.",
+        "enum": [
+          "Best Practice",
+          "Zedmed",
+          "D4w"
+        ]
+      }
+    },
+    "requestBodies": {
+      "commandBySiteImmediatePostReqBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ImmediateCommand"
+            }
+          }
+        }
+      },
+      "commandBySiteAsyncPostReqBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AsyncCommand"
+            }
+          }
+        }
+      },
+      "RegisteredPostReqBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RegisteredQueryPostReq"
+            }
+          }
+        }
+      },
+      "QueryStatusBatchReqBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "queryIds"
+              ],
+              "properties": {
+                "queryIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "description": "Array of query IDs to retrieve status for."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200ImmediateQuery": {
+        "description": "Immediate query executed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuccessfulImmediateQuery"
+            }
+          }
+        }
+      },
+      "400ErrorForIntegratorQuery": {
+        "description": "Bad Request - Invalid request path, parameter or body.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "$ref": "#/components/schemas/ExecutionFailedImmediateQuery"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "401ErrorForIntegratorQuery": {
+        "description": "Unauthorized request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "$ref": "#/components/schemas/ExecutionFailedImmediateQuery"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "403ErrorForIntegratorQuery": {
+        "description": "Access to resource is forbidden.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "$ref": "#/components/schemas/ExecutionFailedImmediateQuery"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "404ErrorForIntegratorQuery": {
+        "description": "The server cannot find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "$ref": "#/components/schemas/ExecutionFailedImmediateQuery"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "500ErrorForIntegratorQuery": {
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "$ref": "#/components/schemas/ExecutionFailedImmediateQuery"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "503ErrorForIntegratorQuery": {
+        "description": "The server is not ready to handle the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "504ErrorForIntegratorQuery": {
+        "description": "Server request to upstream resource timed out.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "201AsyncQuery": {
+        "description": "Async query created.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AsyncQueryInitialised"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "status",
+                "mapping": {
+                  "initialising": "#/components/schemas/AsyncQueryInitialised"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400Error": {
+        "description": "Invalid request path parameter or body.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 400,
+                "statusText": "Bad Request",
+                "message": "Malformed SQL"
+              }
+            }
+          }
+        }
+      },
+      "401Error": {
+        "description": "Unauthorized request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 401,
+                "statusText": "Unauthorized",
+                "message": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API."
+              }
+            }
+          }
+        }
+      },
+      "403Error": {
+        "description": "Access to resource is forbidden.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 403,
+                "statusText": "Forbidden",
+                "message": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API."
+              }
+            }
+          }
+        }
+      },
+      "404Error": {
+        "description": "The server cannot find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 404,
+                "statusText": "Not Found",
+                "message": "The server cannot find the requested resource."
+              }
+            }
+          }
+        }
+      },
+      "500Error": {
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 500,
+                "statusText": "Internal Server Error",
+                "message": "Failed to create query container in CosmosDB."
+              }
+            }
+          }
+        }
+      },
+      "503Error": {
+        "description": "The server is not ready to handle the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 503,
+                "statusText": "Service Unavailable",
+                "message": "Site could not be contacted, please try again later or contact a system administrator."
+              }
+            }
+          }
+        }
+      },
+      "504Error": {
+        "description": "Server request to upstream resource timed out.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 504,
+                "statusText": "Gateway Timeout",
+                "message": "Query took more than 30 seconds to return a result."
+              }
+            }
+          }
+        }
+      },
+      "200GetRegisteredQueries": {
+        "description": "List of Registered Queries",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "registeredQueries": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegisteredQuery"
+                  }
+                }
+              }
+            },
+            "example": {
+              "registeredQueries": [
+                {
+                  "id": "d8d667d9-1234-abcd-56ef-1234567890ab",
+                  "name": "Test",
+                  "registeredQueryType": "query",
+                  "status": "enabled",
+                  "frequency": 60,
+                  "duration": 120,
+                  "createdAt": "2025-05-27T05:23:40.983Z",
+                  "lastHash": "dOFA...",
+                  "metrics": {
+                    "lastExecutionDuration": 15,
+                    "executionSucceededCount": 1,
+                    "executionFailedCount": 0,
+                    "resultSizeSum": 8,
+                    "requestSize": 180,
+                    "lastSucceededAt": "2025-05-27T05:23:46.836Z"
+                  }
+                },
+                {
+                  "id": "6cf4e9be-1234-abcd-56ef-1234567890ab",
+                  "name": "Test",
+                  "registeredQueryType": "query",
+                  "status": "completed",
+                  "frequency": 60,
+                  "duration": 120,
+                  "createdAt": "2025-05-27T04:57:48.791Z",
+                  "completedAt": "2025-05-27T04:59:54.226Z",
+                  "lastErrorDetails": {
+                    "errorType": "mssql",
+                    "errorCode": 2812,
+                    "errorMessage": "Could not find stored procedure 'selct'."
+                  },
+                  "metrics": {
+                    "lastExecutionDuration": 0,
+                    "executionSucceededCount": 0,
+                    "executionFailedCount": 3,
+                    "resultSizeSum": 0,
+                    "requestSize": 179,
+                    "lastFailedAt": "2025-05-27T04:59:54.226Z"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "202RegisteredQuery": {
+        "description": "Accept Registered Query",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RegisteredQueryId"
+            },
+            "example": {
+              "id": "785f1ae1-1234-abcd-56ef-8679258f4aee"
+            }
+          }
+        }
+      },
+      "200RegisteredQuery": {
+        "description": "Registered Query",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RegisteredQuery"
+            },
+            "examples": {
+              "Successful ongoing query": {
+                "value": {
+                  "id": "d8d667d9-1234-abcd-56ef-1234567890ab",
+                  "name": "Test",
+                  "registeredQueryType": "query",
+                  "status": "enabled",
+                  "frequency": 60,
+                  "duration": 120,
+                  "createdAt": "2025-05-27T05:23:40.983Z",
+                  "lastHash": "dOFA...",
+                  "metrics": {
+                    "lastExecutionDuration": 15,
+                    "executionSucceededCount": 1,
+                    "executionFailedCount": 0,
+                    "resultSizeSum": 8,
+                    "requestSize": 180,
+                    "lastSucceededAt": "2025-05-27T05:23:46.836Z"
+                  }
+                }
+              },
+              "Failed completed query": {
+                "value": {
+                  "id": "6cf4e9be-1234-abcd-56ef-1234567890ab",
+                  "name": "Test",
+                  "registeredQueryType": "query",
+                  "status": "completed",
+                  "frequency": 60,
+                  "duration": 120,
+                  "createdAt": "2025-05-27T04:57:48.791Z",
+                  "completedAt": "2025-05-27T04:59:54.226Z",
+                  "lastErrorDetails": {
+                    "errorType": "mssql",
+                    "errorCode": 2812,
+                    "errorMessage": "Could not find stored procedure 'selct'."
+                  },
+                  "metrics": {
+                    "lastExecutionDuration": 0,
+                    "executionSucceededCount": 0,
+                    "executionFailedCount": 3,
+                    "resultSizeSum": 0,
+                    "requestSize": 179,
+                    "lastFailedAt": "2025-05-27T04:59:54.226Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "204RegisteredQueryDelete": {
+        "description": "Registered Query Delete"
+      },
+      "200RegisteredQueryResult": {
+        "description": "Registered Query Result",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RegisteredQueryResult"
+            }
+          }
+        }
+      },
+      "200IntegratorGetQuery": {
+        "description": "Query retrieved.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AsyncQuery"
+            }
+          }
+        }
+      },
+      "200GetQueryStatusBatch": {
+        "description": "Batch query status retrieved.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "results"
+              ],
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueryStatusBatchResult"
+                  }
+                }
+              }
+            },
+            "example": {
+              "results": [
+                {
+                  "queryId": "1366ef6e-d536-457c-8f1b-eaa4352059f9",
+                  "status": "found",
+                  "query": {
+                    "id": "1366ef6e-d536-457c-8f1b-eaa4352059f9",
+                    "siteId": "3f91c577-20a8-467b-8991-b96dfb90e8c6",
+                    "mode": "async",
+                    "status": "successful",
+                    "result": {
+                      "rows": 14,
+                      "size": 15344,
+                      "pages": [
+                        {
+                          "pageNumber": 1,
+                          "status": "cached",
+                          "size": 15467,
+                          "rows": {
+                            "count": 14,
+                            "rangeStart": 0,
+                            "rangeEnd": 13
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "queryId": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+                  "status": "notFound"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "200GetResultPage": {
+        "description": "Query Result Page retrieved.",
+        "headers": {
+          "Size": {
+            "description": "Size of the result page data.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 100
+          },
+          "Rows-Count": {
+            "description": "Number of data rows in the result page.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10
+          },
+          "Rows-Range-Start": {
+            "description": "Starting row number of the query result page.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          "Rows-Range-End": {
+            "description": "Ending row number of the query result page.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 50
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "title": "Query Result",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Data"
+                    },
+                    "parameters": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Parameter"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                {
+                  "title": "Non Query Result",
+                  "type": "object",
+                  "properties": {
+                    "parameters": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Parameter"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "410Error": {
+        "description": "Access to resource is no longer available.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 410,
+                "statusText": "Gone",
+                "message": "Access to the target resource is permanently no longer available at the origin server."
+              }
+            }
+          }
+        }
+      },
+      "200StreamResultPage": {
+        "description": "Successfully streamed the query results page.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string",
+              "description": "Streamed JSON payload representing a single page of query results."
+            }
+          }
+        }
+      },
+      "200FhirQuery": {
+        "description": "Query executed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FhirResource"
+                },
+                {
+                  "$ref": "#/components/schemas/FhirBundle"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "400ErrorForFhirQuery": {
+        "description": "Bad Request - Invalid request path, parameter or body.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OperationOutcome"
+            }
+          }
+        }
+      },
+      "401ErrorForFhirQuery": {
+        "description": "Unauthorized request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OperationOutcome"
+            }
+          }
+        }
+      },
+      "403ErrorForFhirQuery": {
+        "description": "Access to resource is forbidden.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OperationOutcome"
+            }
+          }
+        }
+      },
+      "404ErrorForFhirQuery": {
+        "description": "The server cannot find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OperationOutcome"
+            }
+          }
+        }
+      },
+      "500ErrorForFhirQuery": {
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/OperationOutcome"
+                },
+                {
+                  "$ref": "#/components/schemas/Error"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "503ErrorForFhirQuery": {
+        "description": "The server is not ready to handle the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/OperationOutcome"
+                },
+                {
+                  "$ref": "#/components/schemas/Error"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "504ErrorForFhirQuery": {
+        "description": "Server request to upstream resource timed out.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/OperationOutcome"
+                },
+                {
+                  "$ref": "#/components/schemas/Error"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "200FhirSearch": {
+        "description": "Query executed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FhirBundle"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "200IntegratorGetSite": {
+        "description": "Site retrieved.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SiteForIntegrator"
+            }
+          }
+        }
+      },
+      "502Error": {
+        "description": "Bad gateway. The practice management software returned an unexpected error or result code.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "status": 502,
+                "statusText": "Bad Gateway",
+                "message": "The practice management software returned an unexpected result code."
+              }
+            }
+          }
+        }
+      },
+      "200IntegratorGetSites": {
+        "description": "Sites retrieved.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sites": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SiteForIntegrator"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

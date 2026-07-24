@@ -1,0 +1,164 @@
+aid: best-practice
+name: Best Practice Software
+review:
+  question: Does Best Practice Software expose a real, documented public API surface, and if so is it FHIR/HL7-standard and self-serve or partner-gated?
+  answer: true
+  date: '2026-07-24'
+  reviewer: API Evangelist
+  homeMarket: Australia
+findings:
+  summary: |
+    Best Practice Software is one half of the Australian GP-software duopoly
+    (with MedicalDirector). Its products - Bp Premier, Bp VIP.net, Bp Allied -
+    do not ship their own developer portal at bpsoftware.net; the programmatic
+    surface is delivered through Halo Connect (Halo Cloud / Halo Link), a
+    FHIR-based integration platform, with docs at https://docs.haloconnect.io.
+    Halo Cloud exposes two documented OpenAPI 3.1.1 products - an Integrator API
+    (Sites, SQL Passthrough, FHIR, Registered Queries) and a Desktop
+    Applications API (Tokens, SQL Passthrough, FHIR) - both served from
+    https://api.haloconnect.io behind Azure API Management. The FHIR API for Bp
+    Premier is built to the AU Base 4.1.0 implementation guide, falling back to
+    HL7 FHIR R4 (4.0.1), under
+    https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4/ with a
+    CapabilityStatement at {baseUrl}/metadata. Access is partner-gated: an
+    integrator needs a Halo Cloud subscription, a per-practice site pairing, and
+    PMS-managed database credentials; there is no self-serve public sandbox.
+  developerPortal:
+    url: https://docs.haloconnect.io/
+    httpStatus: 200
+    firstParty: false
+    note: >-
+      Best Practice's API is delivered via its Halo Connect platform. The
+      Bp Premier FHIR Implementation Guide lives in the Bp Premier knowledge
+      base at
+      https://kb.bpsoftware.net/au/bppremier/devportal/ImplementationGuide/index.html
+      (HTTP 200 but login-gated).
+  fhirCapabilityStatement:
+    captured: false
+    fhirVersion: AU Base 4.1.0 (falls back to FHIR R4 4.0.1)
+    metadataEndpoint: https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4/metadata
+    note: >-
+      A live CapabilityStatement is served at {baseUrl}/metadata but requires a
+      valid site GUID plus subscription key, so no metadata JSON could be
+      fetched anonymously and none was fabricated. Documented FHIR resources /
+      operations include Patient, Appointment, Slot (Find Free Slots) and a
+      Patient $summary document; the per-Bp-Premier resource mappings are in the
+      login-gated FHIR IG.
+  downloadableSpecs:
+    count: 2
+    format: OpenAPI 3.1.1
+    provenance:
+      - file: openapi/haloconnect-integrator-openapi.json
+        source: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+        method: Extracted verbatim from the Redoc __redoc_state embedded spec (spec.data)
+        title: Halo Cloud API for Integrators
+        version: 26.619.10213
+        paths: 15
+        tags: [Sites, SQL Passthrough, FHIR, Registered Queries]
+      - file: openapi/haloconnect-desktop-openapi.json
+        source: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+        method: Extracted verbatim from the Redoc __redoc_state embedded spec (spec.data)
+        title: Halo Cloud API for Desktop Applications
+        version: 26.619.10213
+        paths: 10
+        tags: [Tokens, SQL Passthrough, FHIR]
+  authModel:
+    scheme: Azure API Management subscription key
+    integrator:
+      - type: apiKey
+        header: Ocp-Apim-Subscription-Key
+        note: Subscription key for the API; required on every integrator call plus an active site pairing.
+    desktop:
+      - type: apiKey
+        header: Ocp-Apim-Subscription-Key
+      - type: http-bearer
+        format: JWT
+        header: Authorization
+      - type: apiKey
+        header: DeviceId
+    smartOnFhir: false
+    note: >-
+      This is NOT SMART-on-FHIR. No /.well-known/smart-configuration or
+      /.well-known/openid-configuration is served on the API host (probed 404).
+      Practice-level data authorization is handled by the PMS provider (Best
+      Practice), not by Halo Connect.
+  standardsConformance:
+    auBase: true
+    auCore: unstated
+    usCore: false
+    ukCore: false
+    daVinci: false
+    carin: false
+    note: >-
+      FHIR API for Bp Premier is built to AU Base 4.1.0 (Australian Digital
+      Health Agency implementation guide), falling back to FHIR R4 4.0.1. No US
+      Core / UK Core / Da Vinci / CARIN conformance is claimed - this is an
+      Australian primary-care product.
+  access:
+    model: partner-gated
+    selfServe: false
+    sandbox: >-
+      No public self-serve sandbox. New partners contact hello@haloconnect.io or
+      the Bp Partnerships Team at partners@bpsoftware.net; existing Halo Cloud
+      partners access the FHIR API as an additional endpoint.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.haloconnect.io
+      documented: true
+    - protocol: FHIR REST (R4)
+      scheme: https
+      baseURL: https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4
+      documented: true
+    - protocol: Webhooks
+      scheme: https
+      documented: true
+      note: Halo Cloud documents a webhooks surface at https://docs.haloconnect.io/halo-cloud/webhooks/ for event-driven delivery. Not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented for Halo Cloud or the Bp Premier FHIR API as of the review date.
+sources:
+  - url: https://docs.haloconnect.io/
+    type: DeveloperPortal
+    httpStatus: 200
+    note: Halo Connect documentation portal - the developer surface for Best Practice's Halo Cloud APIs.
+  - url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+    type: APIReference
+    httpStatus: 200
+    note: Redoc reference embedding the Integrator OpenAPI 3.1.1 spec (harvested verbatim).
+  - url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+    type: APIReference
+    httpStatus: 200
+    note: Redoc reference embedding the Desktop OpenAPI 3.1.1 spec (harvested verbatim).
+  - url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+    type: Documentation
+    httpStatus: 200
+    note: FHIR API overview - base URL structure, environments, access requirements.
+  - url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+    type: Documentation
+    httpStatus: 200
+    note: States FHIR R4, base URL https://api.haloconnect.io/integrator/sites/{haloGuid}/fhir/R4/, CapabilityStatement at {baseUrl}/metadata, Patient $summary.
+  - url: https://haloconnect.io/blog/fhir-for-bp-premier
+    type: Blog
+    httpStatus: 200
+    note: Announces the FHIR facade for Bp Premier built on AU Base 4.1.0 / FHIR R4 4.0.1; partner onboarding via hello@haloconnect.io / partners@bpsoftware.net.
+  - url: https://kb.bpsoftware.net/au/bppremier/devportal/ImplementationGuide/index.html
+    type: ImplementationGuide
+    httpStatus: 200
+    note: Bp Premier FHIR Implementation Guide in the knowledge base (login-gated).
+  - url: https://bpsoftware.net/
+    type: Website
+    httpStatus: 200
+    note: Corporate site (bot-protected to plain curl; live in browser). No first-party developer portal.
+actions:
+  openapiHarvested: true
+  specsSaved: 2
+  fhirCapabilityCaptured: false
+  reason: |
+    Two real OpenAPI 3.1.1 specifications were harvested verbatim from the Halo
+    Connect Redoc reference pages and saved under openapi/. A live FHIR
+    CapabilityStatement exists at {baseUrl}/metadata but is gated behind a site
+    GUID and subscription key, so none was captured and none was invented. The
+    apis.yml catalogs the three real, documented products: the Halo Cloud
+    Integrator API, the Halo Cloud Desktop API, and the FHIR API for Bp Premier.
