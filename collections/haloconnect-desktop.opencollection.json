@@ -1,0 +1,393 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Halo Cloud API for Desktop Applications",
+    "version": "26.619.10213"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tokens",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get authorization token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.haloconnect.io/integrator/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "device_id",
+                  "value": ""
+                },
+                {
+                  "name": "site_id",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Ocp-Apim-Subscription-Key",
+              "value": "{{Ocp-Apim-Subscription-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint enables integrators to obtain an authorization token for a specific desktop application associated with a given Halo GUID.\nThe token is required to authenticate subsequent requests to the SQL Passthrough or FHIR for that desktop application.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "SQL Passthrough",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute immediate query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/immediate",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send an immediate query to a site and receive the result in the response.\n\nQuery status can also be retrieved using the **Get query status** endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "Submit async query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/async",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Queue an async query for execution at the specified site."
+        },
+        {
+          "info": {
+            "name": "Get query status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/:queryId",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "queryId",
+                "value": "",
+                "type": "path",
+                "description": "Id of the query."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check the status of an immediate or async query.\n\nFor completed async queries, the response includes a `results` object with pagination details for retrieving result pages. Immediate queries do not include pagination since results are returned with the initial request.\n"
+        },
+        {
+          "info": {
+            "name": "Get query result page",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/:queryId/results/:pageNumber",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "queryId",
+                "value": "",
+                "type": "path",
+                "description": "Id of the query."
+              },
+              {
+                "name": "pageNumber",
+                "value": "",
+                "type": "path",
+                "description": "Page number of the results for a query."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a result page from a successful async query."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Registered Queries",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List registered queries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/registered",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all registered queries that are currently active and queued for execution."
+        },
+        {
+          "info": {
+            "name": "Create registered query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/registered",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a registered query to be queued for execution."
+        },
+        {
+          "info": {
+            "name": "Get registered query details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/registered/:queryId",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "queryId",
+                "value": "",
+                "type": "path",
+                "description": "Id of the query."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the details of a registered query."
+        },
+        {
+          "info": {
+            "name": "Cancel registered query",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/registered/:queryId",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "queryId",
+                "value": "",
+                "type": "path",
+                "description": "Id of the query."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel a registered query that is currently queued for execution."
+        },
+        {
+          "info": {
+            "name": "Get registered query results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/queries/registered/:queryId/results",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "queryId",
+                "value": "",
+                "type": "path",
+                "description": "Id of the query."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the result of a registered query that has completed execution."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "FHIR",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search FHIR resources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/fhir/R4/:fhirParameters",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "fhirParameters",
+                "value": "",
+                "type": "path",
+                "description": "Resource names and search parameters per the R4 FHIR specification for using [RESTful APIs](http://hl7.org/fhir/R4/http.html) and [search](http://hl7.org/fhir/R4/search.html)."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a FHIR query to a site and receive the result in the response.\n\nInclude the resource name and search parameters in `fhirParameters`. Example: `Patient?given=John`\n\nSee the [FHIR docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters.\n"
+        },
+        {
+          "info": {
+            "name": "Search FHIR resources (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.haloconnect.io/desktop/sites/:siteId/fhir/R4/:resource/_search",
+            "params": [
+              {
+                "name": "siteId",
+                "value": "",
+                "type": "path",
+                "description": "Halo GUID of the site."
+              },
+              {
+                "name": "resource",
+                "value": "",
+                "type": "path",
+                "description": "The name of the FHIR resource to search for."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a FHIR search query with parameters in the request body.\n\nPOST is recommended for sensitive queries containing personally identifiable information (PII), as it avoids URL length limits and keeps parameters out of logs.\n\nSee the [FHIR docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters. Errors may return as HTTP errors or FHIR [OperationOutcome](https://hl7.org/fhir/R4/operationoutcome.html) resources.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
