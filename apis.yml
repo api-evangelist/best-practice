@@ -50,80 +50,144 @@ created: '2026-07-24'
 modified: '2026-07-24'
 specificationVersion: '0.23'
 apis:
-- aid: best-practice:halo-cloud-integrator-api
-  name: Halo Cloud API for Integrators
-  description: >-
-    The integrator-facing Halo Cloud API from Best Practice's Halo Connect platform.
-    Lets approved partners query Bp Premier practice data by four means - Sites
-    (retrieve site metadata and onboarding info), SQL Passthrough (execute SQL against
-    the practice database), FHIR (search practice data as HL7 FHIR R4 resources), and
-    Registered Queries (recurring SQL). OpenAPI 3.1.1, authenticated with an Azure API
-    Management subscription key (Ocp-Apim-Subscription-Key header); every call requires
-    an active pairing with the target site.
+- aid: best-practice:best-practice-fhir-api
+  name: Best Practice Software FHIR API
+  description: Query practice data using FHIR resources.
   humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
   baseURL: https://api.haloconnect.io
   tags:
   - FHIR
-  - Healthcare
-  - Interoperability
-  - SQL Passthrough
   properties:
   - type: OpenAPI
-    url: openapi/haloconnect-integrator-openapi.json
+    url: openapi/best-practice-fhir-api-openapi.yml
   - type: APIReference
     url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
   - type: Documentation
     url: https://docs.haloconnect.io/halo-cloud/overview/
   - type: GettingStarted
     url: https://docs.haloconnect.io/halo-cloud/getting-started/
-- aid: best-practice:halo-cloud-desktop-api
-  name: Halo Cloud API for Desktop Applications
-  description: >-
-    The desktop-application-facing Halo Cloud API from Halo Connect. Provides a token
-    endpoint plus SQL Passthrough and FHIR query access for locally installed
-    applications integrating with Bp Premier. OpenAPI 3.1.1, authenticated with an
-    Azure API Management subscription key together with a bearer JWT and a DeviceId
-    header identifying the calling device.
-  humanURL: https://docs.haloconnect.io/api-reference/desktop-openapi.html
-  baseURL: https://api.haloconnect.io
-  tags:
-  - FHIR
-  - Healthcare
-  - Desktop
-  - SQL Passthrough
-  properties:
-  - type: OpenAPI
-    url: openapi/haloconnect-desktop-openapi.json
   - type: APIReference
     url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/examples/
+  - type: ImplementationGuide
+    url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
+- aid: best-practice:best-practice-registered-queries-api
+  name: Best Practice Software Registered Queries API
+  description: >-
+    The Registered Queries API from Best Practice Software — 6 operation(s) for registered queries.
+  humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  baseURL: https://api.haloconnect.io
+  tags:
+  - Registered Queries
+  properties:
+  - type: OpenAPI
+    url: openapi/best-practice-registered-queries-api-openapi.yml
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
   - type: Documentation
     url: https://docs.haloconnect.io/halo-cloud/overview/
   - type: GettingStarted
     url: https://docs.haloconnect.io/halo-cloud/getting-started/
-- aid: best-practice:fhir-api-bp-premier
-  name: FHIR API for Bp Premier
-  description: >-
-    The HL7 FHIR API for Best Practice Bp Premier, delivered through Halo Connect. Built
-    to the AU Base 4.1.0 implementation guide, falling back to FHIR R4 (4.0.1) where
-    needed. Resources are served under the base path
-    https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4/ with a
-    CapabilityStatement at {baseUrl}/metadata; documented resources and operations
-    include Patient, Appointment, Slot (Find Free Slots) and a Patient $summary
-    document. The per-Bp-Premier resource mappings are published as a FHIR
-    Implementation Guide in the Bp Premier knowledge base (login required). Access is
-    gated to approved Best Practice partners; the FHIR search operations are also
-    described in the Halo Cloud Integrator OpenAPI.
-  humanURL: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
-  baseURL: https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/examples/
+  - type: ImplementationGuide
+    url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
+- aid: best-practice:best-practice-sites-api
+  name: Best Practice Software Sites API
+  description: Endpoints for practice onboarding and site metadata.
+  humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  baseURL: https://api.haloconnect.io
   tags:
-  - FHIR
-  - HL7
-  - AU Base
-  - Healthcare
-  - Interoperability
+  - Sites
   properties:
   - type: OpenAPI
-    url: openapi/haloconnect-integrator-openapi.json
+    url: openapi/best-practice-sites-api-openapi.yml
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/overview/
+  - type: GettingStarted
+    url: https://docs.haloconnect.io/halo-cloud/getting-started/
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/examples/
+  - type: ImplementationGuide
+    url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
+- aid: best-practice:best-practice-sql-passthrough-api
+  name: Best Practice Software SQL Passthrough API
+  description: >-
+    Send SQL queries to practices as immediate, async or registered queries.
+
+
+    **Immediate queries** are small, time-sensitive queries that return a result in seconds. Response
+    size is limited to 8MB.
+
+
+    **Async queries** are queued for execution and results can be retrieved later. The workflow is:
+
+      1. **Submit async query** – Creates a query and returns a `queryId` on success.
+      2. **Get query status** – Check query status. When complete, includes pagination details.
+      3. **Get query result page** – Retrieve result pages using the pagination info from the status response.
+
+    **Registered Queries** are also supported. See the [Registered Queries](#tag/Registered-Queries) section
+    for more information.
+  humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  baseURL: https://api.haloconnect.io
+  tags:
+  - SQL Passthrough
+  properties:
+  - type: OpenAPI
+    url: openapi/best-practice-sql-passthrough-api-openapi.yml
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/overview/
+  - type: GettingStarted
+    url: https://docs.haloconnect.io/halo-cloud/getting-started/
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/fhir-api/examples/
+  - type: ImplementationGuide
+    url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
+- aid: best-practice:best-practice-tokens-api
+  name: Best Practice Software Tokens API
+  description: Obtain authorization tokens for desktop applications to authenticate API requests.
+  humanURL: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  baseURL: https://api.haloconnect.io
+  tags:
+  - Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/best-practice-tokens-api-openapi.yml
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/integrator-openapi.html
+  - type: Documentation
+    url: https://docs.haloconnect.io/halo-cloud/overview/
+  - type: GettingStarted
+    url: https://docs.haloconnect.io/halo-cloud/getting-started/
+  - type: APIReference
+    url: https://docs.haloconnect.io/api-reference/desktop-openapi.html
   - type: Documentation
     url: https://docs.haloconnect.io/halo-cloud/fhir-api/overview/
   - type: Documentation
