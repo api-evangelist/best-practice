@@ -209,6 +209,9 @@ apis:
   - type: ImplementationGuide
     url: https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm
 common:
+- type: CapabilityMap
+  url: capabilities/best-practice-capability-edges.yml
+  name: Best Practice Software Business Capability Map
 - type: AgenticAccess
   url: agentic-access/best-practice-agentic-access.yml
 - type: DomainSecurity

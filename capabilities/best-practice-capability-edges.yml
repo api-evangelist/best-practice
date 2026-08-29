@@ -1,0 +1,26 @@
+slug: best-practice
+provider: Best Practice Software
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Healthcare Providers
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: FHIR
+  spec_file: best-practice-fhir-api-openapi.yml
+  capability_id: BC-2900.60
+  capability_id_l1: BC-2900
+  capability_name: Healthcare Interoperability Operations
+  confidence: 0.78
+  evidence: GET /desktop/sites/{siteId}/fhir/R4/{fhirParameters} "Search FHIR resources"; schemas FhirBundle,
+    OperationOutcome, FhirResource
+  reason: The operations expose a FHIR R4 query endpoint over practice clinical data for external integrators,
+    which is exactly healthcare interoperability operations (FHIR endpoints, provider data exchange).
+    Slight discount because it is a read/query surface rather than the full HIE operations discipline.
