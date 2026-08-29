@@ -18,9 +18,8 @@ edges:
   capability_id: BC-2900.60
   capability_id_l1: BC-2900
   capability_name: Healthcare Interoperability Operations
-  confidence: 0.78
-  evidence: GET /desktop/sites/{siteId}/fhir/R4/{fhirParameters} "Search FHIR resources"; schemas FhirBundle,
-    OperationOutcome, FhirResource
-  reason: The operations expose a FHIR R4 query endpoint over practice clinical data for external integrators,
-    which is exactly healthcare interoperability operations (FHIR endpoints, provider data exchange).
-    Slight discount because it is a read/query surface rather than the full HIE operations discipline.
+  confidence: 0.85
+  evidence: GET /desktop/sites/{siteId}/fhir/R4/{fhirParameters}  "Search FHIR resources"; schemas FhirBundle,
+    OperationOutcome
+  reason: Operations expose FHIR R4 query endpoints over practice clinical data, which is precisely the
+    operation of FHIR endpoints for health information exchange under Healthcare Interoperability Operations.
