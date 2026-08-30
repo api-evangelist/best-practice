@@ -1,0 +1,779 @@
+openapi: 3.2.0
+info:
+  title: Best Practice Registered Queries API
+  version: 26.619.10213
+  license:
+    name: Copyright © Halo Connect 2023
+    url: http://haloconnect.io
+  x-logo:
+    url: https://20496383.fs1.hubspotusercontent-na1.net/hubfs/20496383/halo_logo%20(1).png
+    altText: Halo Connect Logo
+  description: 'Operations tagged Registered Queries across 2 of this provider''s published API definitions: haloconnect-desktop-openapi.json, haloconnect-integrator-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.haloconnect.io
+  description: Production
+- url: https://api.stage.haloconnect.io
+  description: Stage
+tags:
+- name: Registered Queries
+paths:
+  /desktop/sites/{siteId}/queries/registered:
+    post:
+      tags:
+      - Registered Queries
+      summary: Create registered query
+      description: Create a registered query to be queued for execution.
+      operationId: createRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      responses:
+        '201':
+          $ref: '#/components/responses/202RegisteredQuery'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      requestBody:
+        $ref: '#/components/requestBodies/RegisteredPostReqBody'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    get:
+      tags:
+      - Registered Queries
+      summary: List registered queries
+      description: List all registered queries that are currently active and queued for execution.
+      operationId: getRegisteredQueries
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200GetRegisteredQueries'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /desktop/sites/{siteId}/queries/registered/{queryId}:
+    get:
+      tags:
+      - Registered Queries
+      summary: Get registered query details
+      description: Get the details of a registered query.
+      operationId: getRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200RegisteredQuery'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    delete:
+      tags:
+      - Registered Queries
+      summary: Cancel registered query
+      description: Cancel a registered query that is currently queued for execution.
+      operationId: cancelRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '204':
+          $ref: '#/components/responses/204RegisteredQueryDelete'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /desktop/sites/{siteId}/queries/registered/{queryId}/results:
+    get:
+      tags:
+      - Registered Queries
+      summary: Get registered query results
+      description: Get the result of a registered query that has completed execution.
+      operationId: getRegisteredQueryResult
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200RegisteredQueryResult'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /integrator/sites/{siteId}/queries/registered:
+    post:
+      tags:
+      - Registered Queries
+      summary: Create registered query
+      description: Create a registered query to be queued for execution.
+      operationId: createRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      responses:
+        '202':
+          $ref: '#/components/responses/202RegisteredQuery'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      requestBody:
+        $ref: '#/components/requestBodies/RegisteredPostReqBody'
+      security:
+      - SubscriptionKey: []
+    get:
+      tags:
+      - Registered Queries
+      summary: List registered queries
+      description: List all registered queries that are currently active and queued for execution.
+      operationId: getRegisteredQueries
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200GetRegisteredQueries'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - SubscriptionKey: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /integrator/sites/{siteId}/queries/registered/{queryId}:
+    get:
+      tags:
+      - Registered Queries
+      summary: Get registered query details
+      description: Get the details of a registered query.
+      operationId: getRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200RegisteredQuery'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - SubscriptionKey: []
+    delete:
+      tags:
+      - Registered Queries
+      summary: Cancel registered query
+      description: Cancel a registered query that is currently queued for execution.
+      operationId: cancelRegisteredQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '204':
+          $ref: '#/components/responses/204RegisteredQueryDelete'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - SubscriptionKey: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /integrator/sites/{siteId}/queries/registered/{queryId}/results:
+    get:
+      tags:
+      - Registered Queries
+      summary: Get registered query results
+      description: Get the result of a registered query that has completed execution.
+      operationId: getRegisteredQueryResult
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/QueryId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200RegisteredQueryResult'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+      security:
+      - SubscriptionKey: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+components:
+  responses:
+    500Error:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 500
+              statusText: Internal Server Error
+              message: Failed to create query container in CosmosDB.
+    200GetRegisteredQueries:
+      description: List of Registered Queries
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              registeredQueries:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegisteredQuery'
+          example:
+            registeredQueries:
+            - id: d8d667d9-1234-abcd-56ef-1234567890ab
+              name: Test
+              registeredQueryType: query
+              status: enabled
+              frequency: 60
+              duration: 120
+              createdAt: '2025-05-27T05:23:40.983Z'
+              lastHash: dOFA...
+              metrics:
+                lastExecutionDuration: 15
+                executionSucceededCount: 1
+                executionFailedCount: 0
+                resultSizeSum: 8
+                requestSize: 180
+                lastSucceededAt: '2025-05-27T05:23:46.836Z'
+            - id: 6cf4e9be-1234-abcd-56ef-1234567890ab
+              name: Test
+              registeredQueryType: query
+              status: completed
+              frequency: 60
+              duration: 120
+              createdAt: '2025-05-27T04:57:48.791Z'
+              completedAt: '2025-05-27T04:59:54.226Z'
+              lastErrorDetails:
+                errorType: mssql
+                errorCode: 2812
+                errorMessage: Could not find stored procedure 'selct'.
+              metrics:
+                lastExecutionDuration: 0
+                executionSucceededCount: 0
+                executionFailedCount: 3
+                resultSizeSum: 0
+                requestSize: 179
+                lastFailedAt: '2025-05-27T04:59:54.226Z'
+    403Error:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 403
+              statusText: Forbidden
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    202RegisteredQuery:
+      description: Accept Registered Query
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQueryId'
+          example:
+            id: 785f1ae1-1234-abcd-56ef-8679258f4aee
+    200RegisteredQueryResult:
+      description: Registered Query Result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQueryResult'
+    204RegisteredQueryDelete:
+      description: Registered Query Delete
+    404Error:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+    400Error:
+      description: Invalid request path parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
+    200RegisteredQuery:
+      description: Registered Query
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQuery'
+          examples:
+            Successful ongoing query:
+              value:
+                id: d8d667d9-1234-abcd-56ef-1234567890ab
+                name: Test
+                registeredQueryType: query
+                status: enabled
+                frequency: 60
+                duration: 120
+                createdAt: '2025-05-27T05:23:40.983Z'
+                lastHash: dOFA...
+                metrics:
+                  lastExecutionDuration: 15
+                  executionSucceededCount: 1
+                  executionFailedCount: 0
+                  resultSizeSum: 8
+                  requestSize: 180
+                  lastSucceededAt: '2025-05-27T05:23:46.836Z'
+            Failed completed query:
+              value:
+                id: 6cf4e9be-1234-abcd-56ef-1234567890ab
+                name: Test
+                registeredQueryType: query
+                status: completed
+                frequency: 60
+                duration: 120
+                createdAt: '2025-05-27T04:57:48.791Z'
+                completedAt: '2025-05-27T04:59:54.226Z'
+                lastErrorDetails:
+                  errorType: mssql
+                  errorCode: 2812
+                  errorMessage: Could not find stored procedure 'selct'.
+                metrics:
+                  lastExecutionDuration: 0
+                  executionSucceededCount: 0
+                  executionFailedCount: 3
+                  resultSizeSum: 0
+                  requestSize: 179
+                  lastFailedAt: '2025-05-27T04:59:54.226Z'
+    401Error:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              statusText: Unauthorized
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+  schemas:
+    ExecutionMode:
+      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
+      type: string
+      enum:
+      - reader
+      - nonQuery
+      - scalar
+      default: reader
+    RegisteredQueryMetrics:
+      type: object
+      properties:
+        lastSucceededAt:
+          type: string
+        lastFailedAt:
+          type: string
+        lastExecutionDuration:
+          type: integer
+        executionSucceededCount:
+          type: integer
+        executionFailedCount:
+          type: integer
+        resultSizeSum:
+          type: integer
+        requestSize:
+          type: integer
+    Type:
+      description: Specifies SQL Server-specific data type of a field, property.
+      type: string
+      enum:
+      - BigInt
+      - Binary
+      - Bit
+      - Char
+      - String
+      - Date
+      - DateTime
+      - DateTime2
+      - DateTimeOffset
+      - Decimal
+      - Float
+      - Image
+      - Int
+      - Money
+      - NChar
+      - NText
+      - NVarChar
+      - Real
+      - SmallDateTime
+      - SmallInt
+      - SmallMoney
+      - Structured
+      - Text
+      - Time
+      - Timestamp
+      - TinyInt
+      - Udt
+      - UniqueIdentifier
+      - VarBinary
+      - VarChar
+      - Variant
+      - Xml
+    RegisteredQueryPostReq:
+      type: object
+      required:
+      - name
+      - registeredQueryType
+      - frequency
+      - duration
+      - registerCommand
+      properties:
+        name:
+          type: string
+          description: Customer set identifier for this registered query.
+        registeredQueryType:
+          type: string
+          enum:
+          - query
+        frequency:
+          type: integer
+          description: Seconds between each query execution.
+          example: 300
+        duration:
+          type: integer
+          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
+          example: 43200
+        registerCommand:
+          type: object
+          description: Command to be executed by the registered query.
+          properties:
+            command:
+              $ref: '#/components/schemas/Command'
+    CommandType:
+      description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
+      type: string
+      enum:
+      - text
+      - storedProcedure
+      default: text
+    Command:
+      type: object
+      properties:
+        text:
+          type: string
+          example: GetPatientID
+          description: The SQL statement to execute or the name of the stored procedure to run.
+        executionMode:
+          $ref: '#/components/schemas/ExecutionMode'
+        type:
+          $ref: '#/components/schemas/CommandType'
+        parameters:
+          type: array
+          description: Parameters are used to supply data to, or read outputs from, a stored procedure.
+          items:
+            $ref: '#/components/schemas/Parameter'
+      required:
+      - text
+    Id:
+      type: string
+      format: uuid
+      description: Unique identifier of the entity.
+    Data:
+      type: string
+      format: base64
+      description: Result data that is base64 encoded returned from the executed query.
+      example: e2lk...
+    RegisteredQueryStatus:
+      type: string
+      enum:
+      - initialisationFailedCacheError
+      - enabled
+      - cancelled
+      - completed
+    RegisteredQueryResult:
+      type: object
+      required:
+      - data
+      - parameters
+      - rows
+      - size
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        parameters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Parameter'
+        rows:
+          type: integer
+          example: 12
+        size:
+          type: integer
+          example: 25
+    Date:
+      type: string
+      format: date-time
+    Parameter:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '@siteid'
+          description: The name of the parameter.
+        direction:
+          $ref: '#/components/schemas/Direction'
+        type:
+          $ref: '#/components/schemas/Type'
+        value:
+          $ref: '#/components/schemas/Value'
+        size:
+          $ref: '#/components/schemas/Size'
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
+    RegisteredQueryId:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+    Size:
+      description: The maximum size, in bytes, of the data within the column.
+      type: integer
+      example: 43
+    Direction:
+      description: A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
+      type: string
+      enum:
+      - output
+      - input
+      - inputOutput
+      - returnValue
+    RegisteredQuery:
+      type: object
+      required:
+      - id
+      - name
+      - registeredQueryType
+      - status
+      - frequency
+      - duration
+      - createdAt
+      - metrics
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          description: Customer set identifier for this registered query.
+        registeredQueryType:
+          type: string
+          enum:
+          - query
+        status:
+          $ref: '#/components/schemas/RegisteredQueryStatus'
+        frequency:
+          type: integer
+          description: Seconds between each query execution.
+          example: 300
+        duration:
+          type: integer
+          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
+          example: 43200
+        lastHash:
+          type: string
+          description: Hash of the last successful query result. Present only when the run completes successfully; otherwise empty.
+        lastErrorDetails:
+          description: Details of the last error thrown by running the registered query. Only populated if the query errors.
+          $ref: '#/components/schemas/ErrorDetails'
+        metrics:
+          $ref: '#/components/schemas/RegisteredQueryMetrics'
+        createdAt:
+          description: When the registered query was created.
+          $ref: '#/components/schemas/Date'
+        completedAt:
+          description: When the registered query completed. Only populated on completion.
+          $ref: '#/components/schemas/Date'
+    Value:
+      description: Gets or sets the value of the parameter.
+      type:
+      - string
+      - 'null'
+      format: base64 (output)
+      example: '66'
+    ErrorDetails:
+      type: object
+      properties:
+        errorType:
+          $ref: '#/components/schemas/QueryExecutionFailErrorType'
+        errorCode:
+          type: integer
+        errorMessage:
+          type: string
+    QueryExecutionFailErrorType:
+      type: string
+      enum:
+      - http
+      - mssql
+      - fbsql
+      - haloLink
+  parameters:
+    QueryId:
+      name: queryId
+      in: path
+      description: Id of the query.
+      required: true
+      schema:
+        type: string
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+  requestBodies:
+    RegisteredPostReqBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQueryPostReq'
+  securitySchemes:
+    SubscriptionKey:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+      description: The subscription key for the API.
+    AuthorizationHeader:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token for authentication.
+    DeviceIdHeader:
+      type: apiKey
+      name: DeviceId
+      in: header
+      description: Device ID of the device making the request.
+x-refined-from:
+- haloconnect-desktop-openapi.json
+- haloconnect-integrator-openapi.json

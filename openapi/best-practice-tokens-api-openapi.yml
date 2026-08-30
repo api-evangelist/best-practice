@@ -1,0 +1,134 @@
+openapi: 3.2.0
+info:
+  version: 26.619.10213
+  title: Halo Cloud API for Desktop Applications Tokens API
+  contact:
+    email: support@haloconnect.io
+  license:
+    name: Copyright © Halo Connect 2023
+    url: http://haloconnect.io
+  x-logo:
+    url: https://20496383.fs1.hubspotusercontent-na1.net/hubfs/20496383/halo_logo%20(1).png
+    altText: Halo Connect Logo
+  description: '## Introduction
+
+    This API reference documents the endpoints available for desktop application integration with the Halo Connect Cloud API. It covers:
+
+
+    - **Tokens** – Obtain authorization tokens for desktop applications
+
+    - **SQL Passthrough** – Execute SQL queries against site databases
+
+    - **FHIR** – Query practice data using FHIR resources
+
+    - **Registered Queries** – Execute recurring SQL queries against practice databases
+
+
+    For more information about Halo Connect, visit our [website](https://haloconnect.io) or [blog](https://haloconnect.io/blog).
+
+
+    ## Prerequisites
+
+
+    All API endpoints require an active pairing with the target site. Use the [Pair with a site](./integrator#operation/Integrator_PairSite) endpoint to establish access before making queries.
+
+
+    ## Definitions
+
+
+    For detailed documentation and guides, see our [documentation portal](https://docs.haloconnect.io).
+
+
+    - **Site:** An instance of Halo Link connected to a practice''s PMS database.
+
+    - **Halo GUID:** A unique identifier for a site, used by Halo Connect to route queries.
+
+    '
+servers:
+- url: https://api.haloconnect.io
+  description: Production
+- url: https://api.stage.haloconnect.io
+  description: Stage
+tags:
+- name: Tokens
+  description: Obtain authorization tokens for desktop applications to authenticate API requests.
+paths:
+  /integrator/token:
+    post:
+      tags:
+      - Tokens
+      summary: Get authorization token
+      description: 'This endpoint enables integrators to obtain an authorization token for a specific desktop application associated with a given Halo GUID.
+
+        The token is required to authenticate subsequent requests to the SQL Passthrough or FHIR for that desktop application.
+
+        '
+      operationId: obtainToken
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - urn:halo-connect:oauth:desktop-token
+                  description: Must be set to urn:halo-connect:oauth:desktop-token
+                device_id:
+                  type: string
+                  description: The unique identifier of the device
+                site_id:
+                  type: string
+                  description: The Halo GUID of the site
+              required:
+              - grant_type
+              - device_id
+              - site_id
+            example:
+              grant_type: urn:halo-connect:oauth:desktop-token
+              device_id: example-device-123
+              site_id: example-site-guid
+      responses:
+        '200':
+          description: Token successfully obtained
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '415':
+          description: Unsupported media type
+      security:
+      - SubscriptionKey: []
+components:
+  securitySchemes:
+    SubscriptionKey:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+      description: The subscription key for the API.
+    AuthorizationHeader:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token for authentication.
+    DeviceIdHeader:
+      type: apiKey
+      name: DeviceId
+      in: header
+      description: Device ID of the device making the request.

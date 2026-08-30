@@ -1,0 +1,372 @@
+openapi: 3.2.0
+info:
+  title: Best Practice FHIR API
+  version: 26.619.10213
+  license:
+    name: Copyright © Halo Connect 2023
+    url: http://haloconnect.io
+  x-logo:
+    url: https://20496383.fs1.hubspotusercontent-na1.net/hubfs/20496383/halo_logo%20(1).png
+    altText: Halo Connect Logo
+  description: 'Operations tagged FHIR across 2 of this provider''s published API definitions: haloconnect-desktop-openapi.json, haloconnect-integrator-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.haloconnect.io
+  description: Production
+- url: https://api.stage.haloconnect.io
+  description: Stage
+tags:
+- name: FHIR
+  description: Query practice data using FHIR resources.
+paths:
+  /desktop/sites/{siteId}/fhir/R4/{fhirParameters}:
+    get:
+      tags:
+      - FHIR
+      summary: Search FHIR resources
+      description: 'Send a FHIR query to a site and receive the result in the response.
+
+
+        Include the resource name and search parameters in `fhirParameters`. Example: `Patient?given=John`
+
+
+        See the [FHIR docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters.
+
+        '
+      operationId: getFhirQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/FhirParameters'
+      responses:
+        '200':
+          $ref: '#/components/responses/200FhirQuery'
+        '400':
+          $ref: '#/components/responses/400ErrorForFhirQuery'
+        '401':
+          $ref: '#/components/responses/401ErrorForFhirQuery'
+        '403':
+          $ref: '#/components/responses/403ErrorForFhirQuery'
+        '404':
+          $ref: '#/components/responses/404ErrorForFhirQuery'
+        '500':
+          $ref: '#/components/responses/500ErrorForFhirQuery'
+        '503':
+          $ref: '#/components/responses/503ErrorForFhirQuery'
+        '504':
+          $ref: '#/components/responses/504ErrorForFhirQuery'
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /desktop/sites/{siteId}/fhir/R4/{resource}/_search:
+    post:
+      tags:
+      - FHIR
+      summary: Search FHIR resources (POST)
+      description: 'Send a FHIR search query with parameters in the request body.
+
+
+        POST is recommended for sensitive queries containing personally identifiable information (PII), as it avoids URL length limits and keeps parameters out of logs.
+
+
+        See the [FHIR docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters. Errors may return as HTTP errors or FHIR [OperationOutcome](https://hl7.org/fhir/R4/operationoutcome.html) resources.
+
+        '
+      operationId: postFhirSearch
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/FhirResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/200FhirSearch'
+        '400':
+          $ref: '#/components/responses/400ErrorForFhirQuery'
+        '401':
+          $ref: '#/components/responses/401ErrorForFhirQuery'
+        '403':
+          $ref: '#/components/responses/403ErrorForFhirQuery'
+        '404':
+          $ref: '#/components/responses/404ErrorForFhirQuery'
+        '500':
+          $ref: '#/components/responses/500ErrorForFhirQuery'
+        '503':
+          $ref: '#/components/responses/503ErrorForFhirQuery'
+        '504':
+          $ref: '#/components/responses/504ErrorForFhirQuery'
+      requestBody:
+        description: FHIR search parameters.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: true
+            example:
+              given: John
+              birthdate: gt1900-01-01
+              _sort: birthdate
+      security:
+      - AuthorizationHeader: []
+        DeviceIdHeader: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /integrator/sites/{siteId}/fhir/R4/{fhirParameters}:
+    get:
+      tags:
+      - FHIR
+      summary: Search FHIR resources
+      description: 'Send a FHIR query to a site and receive the result in the response.
+
+
+        Include the resource name and search parameters in `fhirParameters`. Example: `Patient?given=John`
+
+
+        See the [FHIR API docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters.
+
+        '
+      operationId: getFhirQuery
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/FhirParameters'
+      responses:
+        '200':
+          $ref: '#/components/responses/200FhirQuery'
+        '400':
+          $ref: '#/components/responses/400ErrorForFhirQuery'
+        '401':
+          $ref: '#/components/responses/401ErrorForFhirQuery'
+        '403':
+          $ref: '#/components/responses/403ErrorForFhirQuery'
+        '404':
+          $ref: '#/components/responses/404ErrorForFhirQuery'
+        '500':
+          $ref: '#/components/responses/500ErrorForFhirQuery'
+        '503':
+          $ref: '#/components/responses/503ErrorForFhirQuery'
+        '504':
+          $ref: '#/components/responses/504ErrorForFhirQuery'
+      security:
+      - SubscriptionKey: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+  /integrator/sites/{siteId}/fhir/R4/{resource}/_search:
+    post:
+      tags:
+      - FHIR
+      summary: Search FHIR resources (POST)
+      description: 'Send a FHIR search query with parameters in the request body.
+
+
+        POST is recommended for sensitive queries containing personally identifiable information (PII), as it avoids URL length limits and keeps parameters out of logs.
+
+
+        See the [FHIR API docs](https://docs.haloconnect.io/halo-cloud/fhir-api/overview) for supported resources and parameters. Errors may return as HTTP errors or FHIR [OperationOutcome](https://hl7.org/fhir/R4/operationoutcome.html) resources.
+
+        '
+      operationId: postFhirSearch
+      parameters:
+      - $ref: '#/components/parameters/SiteId'
+      - $ref: '#/components/parameters/FhirResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/200FhirSearch'
+        '400':
+          $ref: '#/components/responses/400ErrorForFhirQuery'
+        '401':
+          $ref: '#/components/responses/401ErrorForFhirQuery'
+        '403':
+          $ref: '#/components/responses/403ErrorForFhirQuery'
+        '404':
+          $ref: '#/components/responses/404ErrorForFhirQuery'
+        '500':
+          $ref: '#/components/responses/500ErrorForFhirQuery'
+        '503':
+          $ref: '#/components/responses/503ErrorForFhirQuery'
+        '504':
+          $ref: '#/components/responses/504ErrorForFhirQuery'
+      requestBody:
+        description: FHIR search parameters.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: true
+            example:
+              given: John
+              birthdate: gt1900-01-01
+              _sort: birthdate
+      security:
+      - SubscriptionKey: []
+    servers:
+    - url: https://api.haloconnect.io
+      description: Production
+    - url: https://api.stage.haloconnect.io
+      description: Stage
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
+    FhirBundle:
+      type: object
+      description: Bundle of FHIR resources of the requested type(s).
+      example:
+        application/json:
+          resourceType: Bundle
+          type: searchset
+          total: 0
+    OperationOutcome:
+      type: object
+      description: OperationOutcome resource containing error details.
+      example:
+        application/json:
+          resourceType: OperationOutcome
+          issue:
+          - severity: fatal
+            code: exception
+            details:
+              coding:
+              - system: http://hl7.org/fhir/dotnet-api-operation-outcome
+                code: '5003'
+              text: Details of error
+    FhirResource:
+      type: object
+      description: Singular FHIR resource of the requested type.
+      example:
+        application/json:
+          resourceType: Patient
+          id: '1'
+          name:
+          - use: official
+            text: Mr John Smith
+            family: Smith
+            given:
+            - John
+            prefix:
+            - Mr
+  responses:
+    200FhirSearch:
+      description: Query executed.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/FhirBundle'
+    500ErrorForFhirQuery:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    401ErrorForFhirQuery:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    404ErrorForFhirQuery:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    400ErrorForFhirQuery:
+      description: Bad Request - Invalid request path, parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    200FhirQuery:
+      description: Query executed.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/FhirResource'
+            - $ref: '#/components/schemas/FhirBundle'
+    503ErrorForFhirQuery:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    504ErrorForFhirQuery:
+      description: Server request to upstream resource timed out.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    403ErrorForFhirQuery:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+  parameters:
+    FhirResource:
+      name: resource
+      in: path
+      description: The name of the FHIR resource to search for.
+      schema:
+        type: string
+      required: true
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+    FhirParameters:
+      name: fhirParameters
+      in: path
+      description: Resource names and search parameters per the R4 FHIR specification for using [RESTful APIs](http://hl7.org/fhir/R4/http.html) and [search](http://hl7.org/fhir/R4/search.html).
+      schema:
+        type: string
+      required: true
+  securitySchemes:
+    SubscriptionKey:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+      description: The subscription key for the API.
+    AuthorizationHeader:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token for authentication.
+    DeviceIdHeader:
+      type: apiKey
+      name: DeviceId
+      in: header
+      description: Device ID of the device making the request.
+x-refined-from:
+- haloconnect-desktop-openapi.json
+- haloconnect-integrator-openapi.json
