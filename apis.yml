@@ -42,6 +42,7 @@ accessModel:
   source:
   - authentication
   - documentation
+  - {url: 'https://bpsoftware.net/', status: 301, note: 'declared website redirects to https://bestpracticesoftware.com/ — a different registrable domain (bpsoftware.net -> bestpracticesoftware.com), possible rename or acquisition (probed 2026-09-03, roadmap#169)'}
   generated: '2026-07-24'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
@@ -258,8 +259,9 @@ common:
   url: changelog/best-practice-changelog.yml
 - type: Webhooks
   url: asyncapi/best-practice-webhooks.yml
-- type: MCPServer
+- type: X-MCPServerCandidate
   url: mcp/best-practice-mcp.yml
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
 - type: LLMsTxt
   url: llms/best-practice-llms.txt
 - type: Overlay
