@@ -13,42 +13,7 @@ info:
     altText: Halo Connect Logo
   description: '## Introduction
 
-    This API reference documents the endpoints available to integrators using the Halo Connect Cloud API. It covers:
-
-
-    - **Sites** – Retrieve site metadata and onboarding information
-
-    - **SQL Passthrough** – Execute SQL queries against practice databases
-
-    - **FHIR** – Query practice data using FHIR resources
-
-    - **Registered Queries** – Execute recurring SQL queries against practice databases
-
-
-    For more information about Halo Connect, visit our [website](https://haloconnect.io) or [blog](https://haloconnect.io/blog).
-
-
-    ## Prerequisites
-
-
-    All API endpoints require an active pairing with the target site. Use the [Pair with a site](#operation/Integrator_PairSite) endpoint to establish access before making queries.
-
-
-    ## Definitions
-
-
-    For detailed documentation and guides, see our [documentation portal](https://docs.haloconnect.io).
-
-
-    - **Site:** An instance of Halo Link connected to a practice''s PMS database.
-
-    - **Halo GUID:** A unique identifier for a site, used by Halo Connect to route queries.
-
-    - **PMS:** Practice Management Software.
-
-    - **PMS ID:** The identifier assigned to a site by the PMS vendor.
-
-    '
+    This API reference documents the endpoints available to integrators using the Halo Connect Cloud API.'
 servers:
 - url: https://api.haloconnect.io
   description: Production
@@ -200,17 +165,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 500
-              statusText: Internal Server Error
-              message: Failed to create query container in CosmosDB.
     403Error:
       description: Access to resource is forbidden.
       content:
@@ -221,50 +175,6 @@ components:
             error:
               status: 403
               statusText: Forbidden
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    200IntegratorGetSites:
-      description: Sites retrieved.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              sites:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteForIntegrator'
-    404Error:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 404
-              statusText: Not Found
-              message: The server cannot find the requested resource.
-    400Error:
-      description: Invalid request path parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 400
-              statusText: Bad Request
-              message: Malformed SQL
-    401Error:
-      description: Unauthorized request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 401
-              statusText: Unauthorized
               message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
     502Error:
       description: Bad gateway. The practice management software returned an unexpected error or result code.
@@ -277,21 +187,82 @@ components:
               status: 502
               statusText: Bad Gateway
               message: The practice management software returned an unexpected result code.
+    400Error:
+      description: Invalid request path parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
+    404Error:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+    500Error:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 500
+              statusText: Internal Server Error
+              message: Failed to create query container in CosmosDB.
     200IntegratorGetSite:
       description: Site retrieved.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/SiteForIntegrator'
+    200IntegratorGetSites:
+      description: Sites retrieved.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sites:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SiteForIntegrator'
+    401Error:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              statusText: Unauthorized
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
   schemas:
-    SiteStatus:
-      type: string
-      description: Status of the site.
-      enum:
-      - initialising
-      - active
-      - removed
-      - uninstalled
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
     SiteForIntegrator:
       type: object
       properties:
@@ -356,11 +327,24 @@ components:
           format: date-time
           description: Last updated time on Halo Api server. Date in UTC.
           example: '2022-12-25T12:25:01Z'
-    HaloLinkVersion:
+    PMSType:
+      enum:
+      - BestPractice
+      - Zedmed
+      - D4w
+      example: BestPractice
+      description: The name of the practice management software.
+    SiteId:
       type: string
-      format: version
-      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
-      example: 22.1207.209
+      format: uuid
+      description: Halo GUID of the site.
+    PracticeManagementName:
+      type: string
+      description: Name of the practice management software.
+      enum:
+      - Best Practice
+      - Zedmed
+      - D4w
     PracticeMetadata:
       type: object
       properties:
@@ -379,27 +363,6 @@ components:
           type: string
           example: 3.4.1
           description: The version of the practice management software.
-    PMSType:
-      enum:
-      - BestPractice
-      - Zedmed
-      - D4w
-      example: BestPractice
-      description: The name of the practice management software.
-    SiteAvailability:
-      type: string
-      description: Availability of the site based on time last heard from the site.
-      enum:
-      - online
-      - offline
-      - unreachable
-    PracticeManagementName:
-      type: string
-      description: Name of the practice management software.
-      enum:
-      - Best Practice
-      - Zedmed
-      - D4w
     SiteCatalogues:
       type: array
       description: List of catalogues (databases) available for the site.
@@ -414,32 +377,27 @@ components:
             type: boolean
             example: true
             description: If no catalogue is specified in the Query POST, the default catalogue will be used.
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              format: httpStatus
-            statusText:
-              type: string
-              format: httpStatusPhrase
-            message:
-              type: string
-    SiteId:
+    SiteStatus:
       type: string
-      format: uuid
-      description: Halo GUID of the site.
+      description: Status of the site.
+      enum:
+      - initialising
+      - active
+      - removed
+      - uninstalled
+    SiteAvailability:
+      type: string
+      description: Availability of the site based on time last heard from the site.
+      enum:
+      - online
+      - offline
+      - unreachable
+    HaloLinkVersion:
+      type: string
+      format: version
+      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
+      example: 22.1207.209
   parameters:
-    PracticeManagementSiteIdRequired:
-      name: practiceManagementSiteId
-      in: query
-      description: Filters by the PMS Site Id.
-      schema:
-        type: string
-      required: true
     PracticeManagementName:
       name: practiceManagementName
       in: query
@@ -454,6 +412,13 @@ components:
       required: true
       schema:
         type: string
+    PracticeManagementSiteIdRequired:
+      name: practiceManagementSiteId
+      in: query
+      description: Filters by the PMS Site Id.
+      schema:
+        type: string
+      required: true
   securitySchemes:
     SubscriptionKey:
       type: apiKey

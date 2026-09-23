@@ -1,0 +1,29 @@
+# Front Door AI Index — best-practice — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: best-practice
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: bpsoftware.net
+  final_host: bestpracticesoftware.com
+  ownership: own
+  owner: best-practice
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 12
+  host_score: 12
+  density: 4.34
+  words: 2764
+  tiers:
+    agentic: 1
+    core: 11
+    model: 0
+  ambiguous: 10
+  top_terms:
+    AI: 10
+    intelligence: 6
+    smart: 4
+    artificial intelligence: 1
+    chatbot: 1

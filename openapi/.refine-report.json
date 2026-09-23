@@ -1,0 +1,34 @@
+{
+  "provider": "best-practice",
+  "sources": [
+    "_original/haloconnect-desktop-openapi.json",
+    "_original/haloconnect-integrator-openapi.json"
+  ],
+  "outputs": [
+    "best-practice-fhir-api-openapi.yml",
+    "best-practice-registered-queries-api-openapi.yml",
+    "best-practice-sql-passthrough-api-openapi.yml",
+    "best-practice-tokens-api-openapi.yml",
+    "best-practice-sites-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "haloconnect-desktop-openapi.json: upgraded openapi 3.1.1 -> OpenAPI 3.2.0",
+    "haloconnect-desktop-openapi.json: declared missing tag: Registered Queries",
+    "haloconnect-integrator-openapi.json: upgraded openapi 3.1.1 -> OpenAPI 3.2.0",
+    "tag 'FHIR' spans 2 source specs (haloconnect-desktop-openapi.json, haloconnect-integrator-openapi.json): per-path servers applied",
+    "tag 'Registered Queries' spans 2 source specs (haloconnect-desktop-openapi.json, haloconnect-integrator-openapi.json): per-path servers applied",
+    "tag 'SQL Passthrough' spans 2 source specs (haloconnect-desktop-openapi.json, haloconnect-integrator-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "best-practice-fhir-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "best-practice-registered-queries-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "best-practice-sites-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "best-practice-sql-passthrough-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "best-practice-tokens-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

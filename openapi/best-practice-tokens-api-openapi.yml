@@ -12,38 +12,7 @@ info:
     altText: Halo Connect Logo
   description: '## Introduction
 
-    This API reference documents the endpoints available for desktop application integration with the Halo Connect Cloud API. It covers:
-
-
-    - **Tokens** – Obtain authorization tokens for desktop applications
-
-    - **SQL Passthrough** – Execute SQL queries against site databases
-
-    - **FHIR** – Query practice data using FHIR resources
-
-    - **Registered Queries** – Execute recurring SQL queries against practice databases
-
-
-    For more information about Halo Connect, visit our [website](https://haloconnect.io) or [blog](https://haloconnect.io/blog).
-
-
-    ## Prerequisites
-
-
-    All API endpoints require an active pairing with the target site. Use the [Pair with a site](./integrator#operation/Integrator_PairSite) endpoint to establish access before making queries.
-
-
-    ## Definitions
-
-
-    For detailed documentation and guides, see our [documentation portal](https://docs.haloconnect.io).
-
-
-    - **Site:** An instance of Halo Link connected to a practice''s PMS database.
-
-    - **Halo GUID:** A unique identifier for a site, used by Halo Connect to route queries.
-
-    '
+    This API reference documents the endpoints available for desktop application integration with the Halo Connect Cloud API.'
 servers:
 - url: https://api.haloconnect.io
   description: Production
@@ -60,9 +29,7 @@ paths:
       summary: Get authorization token
       description: 'This endpoint enables integrators to obtain an authorization token for a specific desktop application associated with a given Halo GUID.
 
-        The token is required to authenticate subsequent requests to the SQL Passthrough or FHIR for that desktop application.
-
-        '
+        The token is required to authenticate subsequent requests to the SQL Passthrough or FHIR for that desktop application.'
       operationId: obtainToken
       requestBody:
         content:
