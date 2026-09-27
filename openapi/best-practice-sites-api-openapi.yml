@@ -165,16 +165,27 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Access to resource is forbidden.
+    400Error:
+      description: Invalid request path parameter or body.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
             error:
-              status: 403
-              statusText: Forbidden
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
+    401Error:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              statusText: Unauthorized
               message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
     502Error:
       description: Bad gateway. The practice management software returned an unexpected error or result code.
@@ -187,28 +198,23 @@ components:
               status: 502
               statusText: Bad Gateway
               message: The practice management software returned an unexpected result code.
-    400Error:
-      description: Invalid request path parameter or body.
+    403Error:
+      description: Access to resource is forbidden.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
             error:
-              status: 400
-              statusText: Bad Request
-              message: Malformed SQL
-    404Error:
-      description: The server cannot find the requested resource.
+              status: 403
+              statusText: Forbidden
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    200IntegratorGetSite:
+      description: Site retrieved.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 404
-              statusText: Not Found
-              message: The server cannot find the requested resource.
+            $ref: '#/components/schemas/SiteForIntegrator'
     500Error:
       description: Internal server error.
       content:
@@ -220,12 +226,6 @@ components:
               status: 500
               statusText: Internal Server Error
               message: Failed to create query container in CosmosDB.
-    200IntegratorGetSite:
-      description: Site retrieved.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SiteForIntegrator'
     200IntegratorGetSites:
       description: Sites retrieved.
       content:
@@ -237,18 +237,66 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SiteForIntegrator'
-    401Error:
-      description: Unauthorized request.
+    404Error:
+      description: The server cannot find the requested resource.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
             error:
-              status: 401
-              statusText: Unauthorized
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+  parameters:
+    PracticeManagementName:
+      name: practiceManagementName
+      in: query
+      description: Filters by the name of the Practice Management Software used by the site.
+      schema:
+        $ref: '#/components/schemas/PracticeManagementName'
+      required: true
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+    PracticeManagementSiteIdRequired:
+      name: practiceManagementSiteId
+      in: query
+      description: Filters by the PMS Site Id.
+      schema:
+        type: string
+      required: true
   schemas:
+    SiteStatus:
+      type: string
+      description: Status of the site.
+      enum:
+      - initialising
+      - active
+      - removed
+      - uninstalled
+    PMSType:
+      enum:
+      - BestPractice
+      - Zedmed
+      - D4w
+      example: BestPractice
+      description: The name of the practice management software.
+    SiteAvailability:
+      type: string
+      description: Availability of the site based on time last heard from the site.
+      enum:
+      - online
+      - offline
+      - unreachable
+    SiteId:
+      type: string
+      format: uuid
+      description: Halo GUID of the site.
     Error:
       type: object
       properties:
@@ -263,6 +311,50 @@ components:
               format: httpStatusPhrase
             message:
               type: string
+    SiteCatalogues:
+      type: array
+      description: List of catalogues (databases) available for the site.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Patients
+            description: The name of the catalogue that can be queried.
+          isDefault:
+            type: boolean
+            example: true
+            description: If no catalogue is specified in the Query POST, the default catalogue will be used.
+    PracticeManagementName:
+      type: string
+      description: Name of the practice management software.
+      enum:
+      - Best Practice
+      - Zedmed
+      - D4w
+    PracticeMetadata:
+      type: object
+      properties:
+        pmsType:
+          $ref: '#/components/schemas/PMSType'
+        practiceName:
+          type: string
+          example: Halo Clinic South
+          description: The name of the practice.
+        practiceManagementSiteId:
+          type: string
+          format: string
+          example: '12345'
+          description: The siteId of the practice management software.
+        practiceManagementVersion:
+          type: string
+          example: 3.4.1
+          description: The version of the practice management software.
+    HaloLinkVersion:
+      type: string
+      format: version
+      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
+      example: 22.1207.209
     SiteForIntegrator:
       type: object
       properties:
@@ -327,98 +419,6 @@ components:
           format: date-time
           description: Last updated time on Halo Api server. Date in UTC.
           example: '2022-12-25T12:25:01Z'
-    PMSType:
-      enum:
-      - BestPractice
-      - Zedmed
-      - D4w
-      example: BestPractice
-      description: The name of the practice management software.
-    SiteId:
-      type: string
-      format: uuid
-      description: Halo GUID of the site.
-    PracticeManagementName:
-      type: string
-      description: Name of the practice management software.
-      enum:
-      - Best Practice
-      - Zedmed
-      - D4w
-    PracticeMetadata:
-      type: object
-      properties:
-        pmsType:
-          $ref: '#/components/schemas/PMSType'
-        practiceName:
-          type: string
-          example: Halo Clinic South
-          description: The name of the practice.
-        practiceManagementSiteId:
-          type: string
-          format: string
-          example: '12345'
-          description: The siteId of the practice management software.
-        practiceManagementVersion:
-          type: string
-          example: 3.4.1
-          description: The version of the practice management software.
-    SiteCatalogues:
-      type: array
-      description: List of catalogues (databases) available for the site.
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            example: Patients
-            description: The name of the catalogue that can be queried.
-          isDefault:
-            type: boolean
-            example: true
-            description: If no catalogue is specified in the Query POST, the default catalogue will be used.
-    SiteStatus:
-      type: string
-      description: Status of the site.
-      enum:
-      - initialising
-      - active
-      - removed
-      - uninstalled
-    SiteAvailability:
-      type: string
-      description: Availability of the site based on time last heard from the site.
-      enum:
-      - online
-      - offline
-      - unreachable
-    HaloLinkVersion:
-      type: string
-      format: version
-      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
-      example: 22.1207.209
-  parameters:
-    PracticeManagementName:
-      name: practiceManagementName
-      in: query
-      description: Filters by the name of the Practice Management Software used by the site.
-      schema:
-        $ref: '#/components/schemas/PracticeManagementName'
-      required: true
-    SiteId:
-      name: siteId
-      in: path
-      description: Halo GUID of the site.
-      required: true
-      schema:
-        type: string
-    PracticeManagementSiteIdRequired:
-      name: practiceManagementSiteId
-      in: query
-      description: Filters by the PMS Site Id.
-      schema:
-        type: string
-      required: true
   securitySchemes:
     SubscriptionKey:
       type: apiKey

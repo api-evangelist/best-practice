@@ -170,7 +170,7 @@ paths:
 
 
         Query status can also be retrieved using the **GET Query status** endpoint.'
-      operationId: createImmediateQuery
+      operationId: postIntegratorSitesBySiteIdQueriesImmediate
       parameters:
       - $ref: '#/components/parameters/SiteId'
       responses:
@@ -194,6 +194,8 @@ paths:
         $ref: '#/components/requestBodies/commandBySiteImmediatePostReqBody'
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: createImmediateQuery
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -205,7 +207,7 @@ paths:
       - SQL Passthrough
       summary: Submit async query
       description: Queue an async query for execution. Use the **GET Query status** endpoint to check progress and retrieve pagination details for results.
-      operationId: createAsyncQuery
+      operationId: postIntegratorSitesBySiteIdQueriesAsync
       parameters:
       - $ref: '#/components/parameters/SiteId'
       responses:
@@ -229,6 +231,8 @@ paths:
         $ref: '#/components/requestBodies/commandBySiteAsyncPostReqBody'
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: createAsyncQuery
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -243,7 +247,7 @@ paths:
 
 
         For async queries, successful responses include a `results` object with pagination details for retrieving result pages. Immediate queries do not include pagination since results are returned with the initial request.'
-      operationId: getQuery
+      operationId: getIntegratorSitesBySiteIdQueriesByQueryId
       parameters:
       - $ref: '#/components/parameters/SiteId'
       - $ref: '#/components/parameters/QueryId'
@@ -262,6 +266,8 @@ paths:
           $ref: '#/components/responses/500Error'
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: getQuery
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -307,7 +313,7 @@ paths:
       - SQL Passthrough
       summary: Get query result page
       description: Get a result page from a successful async query.
-      operationId: getResultPage
+      operationId: getIntegratorSitesBySiteIdQueriesByQueryIdResultsByPageNumber
       parameters:
       - $ref: '#/components/parameters/SiteId'
       - $ref: '#/components/parameters/QueryId'
@@ -329,6 +335,8 @@ paths:
           $ref: '#/components/responses/500Error'
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: getResultPage
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -369,37 +377,6 @@ paths:
       description: Stage
 components:
   responses:
-    403Error:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 403
-              statusText: Forbidden
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    503ErrorForIntegratorQuery:
-      description: The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    200ImmediateQuery:
-      description: Immediate query executed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessfulImmediateQuery'
-    401ErrorForIntegratorQuery:
-      description: Unauthorized request.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
     400Error:
       description: Invalid request path parameter or body.
       content:
@@ -411,6 +388,133 @@ components:
               status: 400
               statusText: Bad Request
               message: Malformed SQL
+    410Error:
+      description: Access to resource is no longer available.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 410
+              statusText: Gone
+              message: Access to the target resource is permanently no longer available at the origin server.
+    401Error:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              statusText: Unauthorized
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    500ErrorForIntegratorQuery:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    200ImmediateQuery:
+      description: Immediate query executed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessfulImmediateQuery'
+    503ErrorForIntegratorQuery:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    404ErrorForIntegratorQuery:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    403Error:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 403
+              statusText: Forbidden
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    403ErrorForIntegratorQuery:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    500Error:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 500
+              statusText: Internal Server Error
+              message: Failed to create query container in CosmosDB.
+    503Error:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 503
+              statusText: Service Unavailable
+              message: Site could not be contacted, please try again later or contact a system administrator.
+    404Error:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+    200IntegratorGetQuery:
+      description: Query retrieved.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AsyncQuery'
+    201AsyncQuery:
+      description: Async query created.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/AsyncQueryInitialised'
+            discriminator:
+              propertyName: status
+              mapping:
+                initialising: '#/components/schemas/AsyncQueryInitialised'
+    401ErrorForIntegratorQuery:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
     200GetResultPage:
       description: Query Result Page retrieved.
       headers:
@@ -456,47 +560,6 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/Parameter'
-    404Error:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 404
-              statusText: Not Found
-              message: The server cannot find the requested resource.
-    201AsyncQuery:
-      description: Async query created.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/AsyncQueryInitialised'
-            discriminator:
-              propertyName: status
-              mapping:
-                initialising: '#/components/schemas/AsyncQueryInitialised'
-    400ErrorForIntegratorQuery:
-      description: Bad Request - Invalid request path, parameter or body.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
-    500Error:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 500
-              statusText: Internal Server Error
-              message: Failed to create query container in CosmosDB.
     504Error:
       description: Server request to upstream resource timed out.
       content:
@@ -508,75 +571,20 @@ components:
               status: 504
               statusText: Gateway Timeout
               message: Query took more than 30 seconds to return a result.
-    403ErrorForIntegratorQuery:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
-    404ErrorForIntegratorQuery:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
-    503Error:
-      description: The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 503
-              statusText: Service Unavailable
-              message: Site could not be contacted, please try again later or contact a system administrator.
-    200IntegratorGetQuery:
-      description: Query retrieved.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AsyncQuery'
-    500ErrorForIntegratorQuery:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
     504ErrorForIntegratorQuery:
       description: Server request to upstream resource timed out.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    401Error:
-      description: Unauthorized request.
+    400ErrorForIntegratorQuery:
+      description: Bad Request - Invalid request path, parameter or body.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 401
-              statusText: Unauthorized
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    410Error:
-      description: Access to resource is no longer available.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 410
-              statusText: Gone
-              message: Access to the target resource is permanently no longer available at the origin server.
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
     200StreamResultPage:
       description: Successfully streamed the query results page.
       content:
@@ -619,110 +627,7 @@ components:
                       rangeEnd: 13
             - queryId: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
               status: notFound
-  parameters:
-    PageNumber:
-      name: pageNumber
-      in: path
-      description: Page number of the results for a query.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-    QueryId:
-      name: queryId
-      in: path
-      description: Id of the query.
-      required: true
-      schema:
-        type: string
-    SiteId:
-      name: siteId
-      in: path
-      description: Halo GUID of the site.
-      required: true
-      schema:
-        type: string
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              format: httpStatus
-            statusText:
-              type: string
-              format: httpStatusPhrase
-            message:
-              type: string
-    Catalogue:
-      type: string
-      example: Patients
-      description: Indicates which database to run against. If no catalogue is specified a default catalogue will be chosen instead. Supported for all PMS with multiple databases. Database catalogues, including the default catalogue, can be identified from the catalogue.name property returned by the Site API endpoints, and are consistent across all sites of a single PMS type.
-    ExecutionFailedImmediateQuery:
-      allOf:
-      - $ref: '#/components/schemas/ImmediateQuery'
-      - $ref: '#/components/schemas/FailedQueryErrorPropertiesV2'
-    QueryExecutionFailErrorType:
-      type: string
-      enum:
-      - http
-      - mssql
-      - fbsql
-      - haloLink
-    Value:
-      description: Gets or sets the value of the parameter.
-      type:
-      - string
-      - 'null'
-      format: base64 (output)
-      example: '66'
-    FailedQueryErrorPropertiesV2:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - executionFailed
-        statusTiming:
-          $ref: '#/components/schemas/StatusTiming'
-          example:
-            statusTiming:
-              initialising:
-                startTime: '2019-08-24T14:15:22.847Z'
-              executing:
-                startTime: '2019-08-24T14:15:22.847Z'
-        errorCode:
-          deprecated: true
-          type: integer
-        errorMessage:
-          deprecated: true
-          type: string
-        errorDetails:
-          $ref: '#/components/schemas/ErrorDetails'
-        completedAt:
-          $ref: '#/components/schemas/Date'
-    AsyncCommand:
-      allOf:
-      - type: object
-        properties:
-          maxTimeInQueue:
-            $ref: '#/components/schemas/AsyncMaxTimeInQueue'
-          command:
-            $ref: '#/components/schemas/Command'
-          catalogue:
-            $ref: '#/components/schemas/Catalogue'
-        required:
-        - command
-    RequestSize:
-      type: integer
-      example: 98
-    Size:
-      description: The maximum size, in bytes, of the data within the column.
-      type: integer
-      example: 43
     Type:
       description: Specifies SQL Server-specific data type of a field, property.
       type: string
@@ -759,6 +664,21 @@ components:
       - VarChar
       - Variant
       - Xml
+    Parameter:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '@siteid'
+          description: The name of the parameter.
+        direction:
+          $ref: '#/components/schemas/Direction'
+        type:
+          $ref: '#/components/schemas/Type'
+        value:
+          $ref: '#/components/schemas/Value'
+        size:
+          $ref: '#/components/schemas/Size'
     CommandType:
       description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
       type: string
@@ -766,6 +686,80 @@ components:
       - text
       - storedProcedure
       default: text
+    FailedQueryErrorPropertiesV2:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - executionFailed
+        statusTiming:
+          $ref: '#/components/schemas/StatusTiming'
+          example:
+            statusTiming:
+              initialising:
+                startTime: '2019-08-24T14:15:22.847Z'
+              executing:
+                startTime: '2019-08-24T14:15:22.847Z'
+        errorCode:
+          deprecated: true
+          type: integer
+        errorMessage:
+          deprecated: true
+          type: string
+        errorDetails:
+          $ref: '#/components/schemas/ErrorDetails'
+        completedAt:
+          $ref: '#/components/schemas/Date'
+    InitialisedAsyncQueryProperties:
+      type: object
+      properties:
+        statusTiming:
+          $ref: '#/components/schemas/StatusTiming'
+      required:
+      - statusTiming
+      example:
+        statusTiming:
+          initialising:
+            startTime: '2019-08-24T14:15:22.847Z'
+    AsyncMaxTimeInQueue:
+      type: integer
+      format: milli-seconds
+      example: 900000
+      minimum: 0
+      maximum: 7200000
+      default: 3600000
+    QueryResult:
+      type: object
+      required:
+      - rows
+      - size
+      - data
+      properties:
+        rows:
+          type: integer
+          example: 30
+        size:
+          type: integer
+          example: 25
+        data:
+          $ref: '#/components/schemas/Data'
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parameter'
+    ImmediateCommand:
+      allOf:
+      - type: object
+        properties:
+          maxTimeInQueue:
+            $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
+          command:
+            $ref: '#/components/schemas/Command'
+          catalogue:
+            $ref: '#/components/schemas/Catalogue'
+        required:
+        - command
     ImmediateQuery:
       type: object
       required:
@@ -800,72 +794,6 @@ components:
           $ref: '#/components/schemas/Date'
         updatedAt:
           $ref: '#/components/schemas/Date'
-    SuccessfulImmediateQueryProperties:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - successful
-        statusTiming:
-          allOf:
-          - $ref: '#/components/schemas/StatusTimingImmediate'
-        metrics:
-          $ref: '#/components/schemas/QueryMetrics'
-        result:
-          oneOf:
-          - $ref: '#/components/schemas/QueryResult'
-          - $ref: '#/components/schemas/NonQueryResult'
-        resultSize:
-          $ref: '#/components/schemas/ResultSize'
-        completedAt:
-          $ref: '#/components/schemas/Date'
-      required:
-      - statusTiming
-      - metrics
-      - result
-      - completedAt
-    QueryMetrics:
-      type: object
-      required:
-      - sqlExecutionDuration
-      properties:
-        sqlExecutionDuration:
-          type: integer
-          example: 1000
-          description: The number of milli-seconds from when Halo Link Service sends a query to the database until it gets a response.
-    AsyncQueryInitialised:
-      allOf:
-      - $ref: '#/components/schemas/AsyncQuery'
-      - $ref: '#/components/schemas/InitialisedAsyncQueryProperties'
-    NonQueryResult:
-      type: object
-      required:
-      - rowsAffected
-      - size
-      properties:
-        rowsAffected:
-          type: integer
-          example: 30
-        size:
-          type: integer
-          example: 25
-        parameters:
-          type: array
-          items:
-            $ref: '#/components/schemas/Parameter'
-    ExecutionMode:
-      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
-      type: string
-      enum:
-      - reader
-      - nonQuery
-      - scalar
-      default: reader
-    SiteId:
-      type: string
-      format: uuid
-      description: Halo GUID of the site.
     Command:
       type: object
       properties:
@@ -892,19 +820,6 @@ components:
       - input
       - inputOutput
       - returnValue
-    Date:
-      type: string
-      format: date-time
-    CommandSize:
-      type: integer
-      example: 98
-    ImmediateMaxTimeInQueue:
-      type: integer
-      format: milli-seconds
-      example: 15000
-      minimum: 0
-      maximum: 60000
-      default: 30000
     AsyncQueryStatus:
       description: Status `initialisationFailedSiteOffline` means query failed as the site closed session. `initialisationFailedSiteUnreachable` means site hasn't contacted two minutes.
       type: string
@@ -920,21 +835,6 @@ components:
       - uploading
       - uploadFailed
       - successful
-    Parameter:
-      type: object
-      properties:
-        name:
-          type: string
-          example: '@siteid'
-          description: The name of the parameter.
-        direction:
-          $ref: '#/components/schemas/Direction'
-        type:
-          $ref: '#/components/schemas/Type'
-        value:
-          $ref: '#/components/schemas/Value'
-        size:
-          $ref: '#/components/schemas/Size'
     StatusTimingImmediate:
       type: object
       description: The server time (UTC) at which a query entered and exited the various states.
@@ -960,32 +860,95 @@ components:
       required:
       - initialising
       - executing
-    ResultSize:
-      type: integer
-      example: 98
     Id:
       type: string
       format: uuid
       description: Unique identifier of the entity.
-    QueryResult:
+    Size:
+      description: The maximum size, in bytes, of the data within the column.
+      type: integer
+      example: 43
+    ExecutionMode:
+      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
+      type: string
+      enum:
+      - reader
+      - nonQuery
+      - scalar
+      default: reader
+    ImmediateMaxTimeInQueue:
+      type: integer
+      format: milli-seconds
+      example: 15000
+      minimum: 0
+      maximum: 60000
+      default: 30000
+    SuccessfulImmediateQueryProperties:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - successful
+        statusTiming:
+          allOf:
+          - $ref: '#/components/schemas/StatusTimingImmediate'
+        metrics:
+          $ref: '#/components/schemas/QueryMetrics'
+        result:
+          oneOf:
+          - $ref: '#/components/schemas/QueryResult'
+          - $ref: '#/components/schemas/NonQueryResult'
+        resultSize:
+          $ref: '#/components/schemas/ResultSize'
+        completedAt:
+          $ref: '#/components/schemas/Date'
+      required:
+      - statusTiming
+      - metrics
+      - result
+      - completedAt
+    NonQueryResult:
       type: object
       required:
-      - rows
+      - rowsAffected
       - size
-      - data
       properties:
-        rows:
+        rowsAffected:
           type: integer
           example: 30
         size:
           type: integer
           example: 25
-        data:
-          $ref: '#/components/schemas/Data'
         parameters:
           type: array
           items:
             $ref: '#/components/schemas/Parameter'
+    SiteId:
+      type: string
+      format: uuid
+      description: Halo GUID of the site.
+    Value:
+      description: Gets or sets the value of the parameter.
+      type:
+      - string
+      - 'null'
+      format: base64 (output)
+      example: '66'
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
     StatusTiming:
       type: object
       description: The server time (UTC) at which a query entered and exited the various states.
@@ -1018,6 +981,47 @@ components:
               $ref: '#/components/schemas/Date'
       required:
       - initialising
+    ErrorDetails:
+      type: object
+      properties:
+        errorType:
+          $ref: '#/components/schemas/QueryExecutionFailErrorType'
+        errorCode:
+          type: integer
+        errorMessage:
+          type: string
+    RequestSize:
+      type: integer
+      example: 98
+    AsyncCommand:
+      allOf:
+      - type: object
+        properties:
+          maxTimeInQueue:
+            $ref: '#/components/schemas/AsyncMaxTimeInQueue'
+          command:
+            $ref: '#/components/schemas/Command'
+          catalogue:
+            $ref: '#/components/schemas/Catalogue'
+        required:
+        - command
+    Date:
+      type: string
+      format: date-time
+    Data:
+      type: string
+      format: base64
+      description: Result data that is base64 encoded returned from the executed query.
+      example: e2lk...
+    QueryMetrics:
+      type: object
+      required:
+      - sqlExecutionDuration
+      properties:
+        sqlExecutionDuration:
+          type: integer
+          example: 1000
+          description: The number of milli-seconds from when Halo Link Service sends a query to the database until it gets a response.
     AsyncQuery:
       type: object
       required:
@@ -1068,58 +1072,44 @@ components:
           $ref: '#/components/schemas/Date'
         updatedAt:
           $ref: '#/components/schemas/Date'
-    Data:
-      type: string
-      format: base64
-      description: Result data that is base64 encoded returned from the executed query.
-      example: e2lk...
-    IntegratorId:
-      type: string
-      format: uuid
-      description: Id of the Integrator that created the query.
-    InitialisedAsyncQueryProperties:
-      type: object
-      properties:
-        statusTiming:
-          $ref: '#/components/schemas/StatusTiming'
-      required:
-      - statusTiming
-      example:
-        statusTiming:
-          initialising:
-            startTime: '2019-08-24T14:15:22.847Z'
-    ErrorDetails:
-      type: object
-      properties:
-        errorType:
-          $ref: '#/components/schemas/QueryExecutionFailErrorType'
-        errorCode:
-          type: integer
-        errorMessage:
-          type: string
     SuccessfulImmediateQuery:
       allOf:
       - $ref: '#/components/schemas/ImmediateQuery'
       - $ref: '#/components/schemas/SuccessfulImmediateQueryProperties'
-    ImmediateCommand:
-      allOf:
-      - type: object
-        properties:
-          maxTimeInQueue:
-            $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
-          command:
-            $ref: '#/components/schemas/Command'
-          catalogue:
-            $ref: '#/components/schemas/Catalogue'
-        required:
-        - command
-    AsyncMaxTimeInQueue:
+    ResultSize:
       type: integer
-      format: milli-seconds
-      example: 900000
-      minimum: 0
-      maximum: 7200000
-      default: 3600000
+      example: 98
+    QueryExecutionFailErrorType:
+      type: string
+      enum:
+      - http
+      - mssql
+      - fbsql
+      - haloLink
+    Catalogue:
+      type: string
+      example: Patients
+      description: Indicates which database to run against. If no catalogue is specified a default catalogue will be chosen instead. Supported for all PMS with multiple databases. Database catalogues, including the default catalogue, can be identified from the catalogue.name property returned by the Site API endpoints, and are consistent across all sites of a single PMS type.
+    ExecutionFailedImmediateQuery:
+      allOf:
+      - $ref: '#/components/schemas/ImmediateQuery'
+      - $ref: '#/components/schemas/FailedQueryErrorPropertiesV2'
+    IntegratorId:
+      type: string
+      format: uuid
+      description: Id of the Integrator that created the query.
+    CommandSize:
+      type: integer
+      example: 98
+    AsyncQueryInitialised:
+      allOf:
+      - $ref: '#/components/schemas/AsyncQuery'
+      - $ref: '#/components/schemas/InitialisedAsyncQueryProperties'
+    QueryStatusBatchResultStatus:
+      type: string
+      enum:
+      - found
+      - notFound
     QueryStatusBatchResult:
       type: object
       required:
@@ -1132,11 +1122,29 @@ components:
           $ref: '#/components/schemas/QueryStatusBatchResultStatus'
         query:
           $ref: '#/components/schemas/AsyncQuery'
-    QueryStatusBatchResultStatus:
-      type: string
-      enum:
-      - found
-      - notFound
+  parameters:
+    QueryId:
+      name: queryId
+      in: path
+      description: Id of the query.
+      required: true
+      schema:
+        type: string
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+    PageNumber:
+      name: pageNumber
+      in: path
+      description: Page number of the results for a query.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
   requestBodies:
     commandBySiteImmediatePostReqBody:
       content:

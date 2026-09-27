@@ -124,7 +124,7 @@ paths:
 
 
         See the FHIR API docs for supported resources and parameters.'
-      operationId: getFhirQuery
+      operationId: getIntegratorSitesBySiteIdFhirR4ByFhirParameters
       parameters:
       - $ref: '#/components/parameters/SiteId'
       - $ref: '#/components/parameters/FhirParameters'
@@ -147,6 +147,8 @@ paths:
           $ref: '#/components/responses/504ErrorForFhirQuery'
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: getFhirQuery
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -164,7 +166,7 @@ paths:
 
 
         See the FHIR API docs for supported resources and parameters. Errors may return as HTTP errors or FHIR OperationOutcome resources.'
-      operationId: postFhirSearch
+      operationId: postIntegratorSitesBySiteIdFhirR4ByResourceSearch
       parameters:
       - $ref: '#/components/parameters/SiteId'
       - $ref: '#/components/parameters/FhirResource'
@@ -199,6 +201,8 @@ paths:
               _sort: birthdate
       security:
       - SubscriptionKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: postFhirSearch
     servers:
     - url: https://api.haloconnect.io
       description: Production
@@ -206,14 +210,6 @@ paths:
       description: Stage
 components:
   schemas:
-    FhirBundle:
-      type: object
-      description: Bundle of FHIR resources of the requested type(s).
-      example:
-        application/json:
-          resourceType: Bundle
-          type: searchset
-          total: 0
     Error:
       type: object
       properties:
@@ -242,6 +238,14 @@ components:
               - system: http://hl7.org/fhir/dotnet-api-operation-outcome
                 code: '5003'
               text: Details of error
+    FhirBundle:
+      type: object
+      description: Bundle of FHIR resources of the requested type(s).
+      example:
+        application/json:
+          resourceType: Bundle
+          type: searchset
+          total: 0
     FhirResource:
       type: object
       description: Singular FHIR resource of the requested type.
@@ -266,31 +270,6 @@ components:
             oneOf:
             - $ref: '#/components/schemas/OperationOutcome'
             - $ref: '#/components/schemas/Error'
-    401ErrorForFhirQuery:
-      description: Unauthorized request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    200FhirSearch:
-      description: Query executed.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/FhirBundle'
-    403ErrorForFhirQuery:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    400ErrorForFhirQuery:
-      description: Bad Request - Invalid request path, parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
     503ErrorForFhirQuery:
       description: The server is not ready to handle the request.
       content:
@@ -299,6 +278,12 @@ components:
             oneOf:
             - $ref: '#/components/schemas/OperationOutcome'
             - $ref: '#/components/schemas/Error'
+    403ErrorForFhirQuery:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
     200FhirQuery:
       description: Query executed.
       content:
@@ -307,8 +292,27 @@ components:
             oneOf:
             - $ref: '#/components/schemas/FhirResource'
             - $ref: '#/components/schemas/FhirBundle'
+    200FhirSearch:
+      description: Query executed.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/FhirBundle'
     404ErrorForFhirQuery:
       description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    401ErrorForFhirQuery:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    400ErrorForFhirQuery:
+      description: Bad Request - Invalid request path, parameter or body.
       content:
         application/json:
           schema:
