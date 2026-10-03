@@ -377,86 +377,6 @@ paths:
       description: Stage
 components:
   responses:
-    400Error:
-      description: Invalid request path parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 400
-              statusText: Bad Request
-              message: Malformed SQL
-    410Error:
-      description: Access to resource is no longer available.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 410
-              statusText: Gone
-              message: Access to the target resource is permanently no longer available at the origin server.
-    401Error:
-      description: Unauthorized request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 401
-              statusText: Unauthorized
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    500ErrorForIntegratorQuery:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
-    200ImmediateQuery:
-      description: Immediate query executed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessfulImmediateQuery'
-    503ErrorForIntegratorQuery:
-      description: The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    404ErrorForIntegratorQuery:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
-    403Error:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 403
-              statusText: Forbidden
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    403ErrorForIntegratorQuery:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/Error'
-            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
     500Error:
       description: Internal server error.
       content:
@@ -468,47 +388,22 @@ components:
               status: 500
               statusText: Internal Server Error
               message: Failed to create query container in CosmosDB.
-    503Error:
-      description: The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 503
-              statusText: Service Unavailable
-              message: Site could not be contacted, please try again later or contact a system administrator.
-    404Error:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 404
-              statusText: Not Found
-              message: The server cannot find the requested resource.
     200IntegratorGetQuery:
       description: Query retrieved.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AsyncQuery'
-    201AsyncQuery:
-      description: Async query created.
+    404ErrorForIntegratorQuery:
+      description: The server cannot find the requested resource.
       content:
         application/json:
           schema:
             oneOf:
-            - $ref: '#/components/schemas/AsyncQueryInitialised'
-            discriminator:
-              propertyName: status
-              mapping:
-                initialising: '#/components/schemas/AsyncQueryInitialised'
-    401ErrorForIntegratorQuery:
-      description: Unauthorized request.
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    400ErrorForIntegratorQuery:
+      description: Bad Request - Invalid request path, parameter or body.
       content:
         application/json:
           schema:
@@ -560,6 +455,42 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/Parameter'
+    503ErrorForIntegratorQuery:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    401ErrorForIntegratorQuery:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    401Error:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              statusText: Unauthorized
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    201AsyncQuery:
+      description: Async query created.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/AsyncQueryInitialised'
+            discriminator:
+              propertyName: status
+              mapping:
+                initialising: '#/components/schemas/AsyncQueryInitialised'
     504Error:
       description: Server request to upstream resource timed out.
       content:
@@ -571,14 +502,83 @@ components:
               status: 504
               statusText: Gateway Timeout
               message: Query took more than 30 seconds to return a result.
+    400Error:
+      description: Invalid request path parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
+    503Error:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 503
+              statusText: Service Unavailable
+              message: Site could not be contacted, please try again later or contact a system administrator.
     504ErrorForIntegratorQuery:
       description: Server request to upstream resource timed out.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    400ErrorForIntegratorQuery:
-      description: Bad Request - Invalid request path, parameter or body.
+    500ErrorForIntegratorQuery:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/ExecutionFailedImmediateQuery'
+    403Error:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 403
+              statusText: Forbidden
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    410Error:
+      description: Access to resource is no longer available.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 410
+              statusText: Gone
+              message: Access to the target resource is permanently no longer available at the origin server.
+    200ImmediateQuery:
+      description: Immediate query executed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessfulImmediateQuery'
+    404Error:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+    403ErrorForIntegratorQuery:
+      description: Access to resource is forbidden.
       content:
         application/json:
           schema:
@@ -628,89 +628,6 @@ components:
             - queryId: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
               status: notFound
   schemas:
-    Type:
-      description: Specifies SQL Server-specific data type of a field, property.
-      type: string
-      enum:
-      - BigInt
-      - Binary
-      - Bit
-      - Char
-      - String
-      - Date
-      - DateTime
-      - DateTime2
-      - DateTimeOffset
-      - Decimal
-      - Float
-      - Image
-      - Int
-      - Money
-      - NChar
-      - NText
-      - NVarChar
-      - Real
-      - SmallDateTime
-      - SmallInt
-      - SmallMoney
-      - Structured
-      - Text
-      - Time
-      - Timestamp
-      - TinyInt
-      - Udt
-      - UniqueIdentifier
-      - VarBinary
-      - VarChar
-      - Variant
-      - Xml
-    Parameter:
-      type: object
-      properties:
-        name:
-          type: string
-          example: '@siteid'
-          description: The name of the parameter.
-        direction:
-          $ref: '#/components/schemas/Direction'
-        type:
-          $ref: '#/components/schemas/Type'
-        value:
-          $ref: '#/components/schemas/Value'
-        size:
-          $ref: '#/components/schemas/Size'
-    CommandType:
-      description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
-      type: string
-      enum:
-      - text
-      - storedProcedure
-      default: text
-    FailedQueryErrorPropertiesV2:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - executionFailed
-        statusTiming:
-          $ref: '#/components/schemas/StatusTiming'
-          example:
-            statusTiming:
-              initialising:
-                startTime: '2019-08-24T14:15:22.847Z'
-              executing:
-                startTime: '2019-08-24T14:15:22.847Z'
-        errorCode:
-          deprecated: true
-          type: integer
-        errorMessage:
-          deprecated: true
-          type: string
-        errorDetails:
-          $ref: '#/components/schemas/ErrorDetails'
-        completedAt:
-          $ref: '#/components/schemas/Date'
     InitialisedAsyncQueryProperties:
       type: object
       properties:
@@ -722,13 +639,10 @@ components:
         statusTiming:
           initialising:
             startTime: '2019-08-24T14:15:22.847Z'
-    AsyncMaxTimeInQueue:
-      type: integer
-      format: milli-seconds
-      example: 900000
-      minimum: 0
-      maximum: 7200000
-      default: 3600000
+    IntegratorId:
+      type: string
+      format: uuid
+      description: Id of the Integrator that created the query.
     QueryResult:
       type: object
       required:
@@ -748,93 +662,62 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Parameter'
-    ImmediateCommand:
+    ImmediateMaxTimeInQueue:
+      type: integer
+      format: milli-seconds
+      example: 15000
+      minimum: 0
+      maximum: 60000
+      default: 30000
+    QueryMetrics:
+      type: object
+      required:
+      - sqlExecutionDuration
+      properties:
+        sqlExecutionDuration:
+          type: integer
+          example: 1000
+          description: The number of milli-seconds from when Halo Link Service sends a query to the database until it gets a response.
+    SiteId:
+      type: string
+      format: uuid
+      description: Halo GUID of the site.
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
+    SuccessfulImmediateQuery:
       allOf:
-      - type: object
-        properties:
-          maxTimeInQueue:
-            $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
-          command:
-            $ref: '#/components/schemas/Command'
-          catalogue:
-            $ref: '#/components/schemas/Catalogue'
-        required:
-        - command
-    ImmediateQuery:
-      type: object
-      required:
-      - id
-      - integratorId
-      - siteId
-      - mode
-      - status
-      - maxTimeInQueue
-      - commandSize
-      - createdAt
-      - updatedAt
-      - requestSize
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        integratorId:
-          $ref: '#/components/schemas/IntegratorId'
-        siteId:
-          $ref: '#/components/schemas/SiteId'
-        mode:
-          type: string
-          enum:
-          - immediate
-        maxTimeInQueue:
-          $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
-        commandSize:
-          $ref: '#/components/schemas/CommandSize'
-        requestSize:
-          $ref: '#/components/schemas/RequestSize'
-        createdAt:
-          $ref: '#/components/schemas/Date'
-        updatedAt:
-          $ref: '#/components/schemas/Date'
-    Command:
-      type: object
-      properties:
-        text:
-          type: string
-          example: GetPatientID
-          description: The SQL statement to execute or the name of the stored procedure to run.
-        executionMode:
-          $ref: '#/components/schemas/ExecutionMode'
-        type:
-          $ref: '#/components/schemas/CommandType'
-        parameters:
-          type: array
-          description: Parameters are used to supply data to, or read outputs from, a stored procedure.
-          items:
-            $ref: '#/components/schemas/Parameter'
-      required:
+      - $ref: '#/components/schemas/ImmediateQuery'
+      - $ref: '#/components/schemas/SuccessfulImmediateQueryProperties'
+    Catalogue:
+      type: string
+      example: Patients
+      description: Indicates which database to run against. If no catalogue is specified a default catalogue will be chosen instead. Supported for all PMS with multiple databases. Database catalogues, including the default catalogue, can be identified from the catalogue.name property returned by the Site API endpoints, and are consistent across all sites of a single PMS type.
+    Value:
+      description: Gets or sets the value of the parameter.
+      type:
+      - string
+      - 'null'
+      format: base64 (output)
+      example: '66'
+    CommandType:
+      description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
+      type: string
+      enum:
       - text
-    Direction:
-      description: A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
-      type: string
-      enum:
-      - output
-      - input
-      - inputOutput
-      - returnValue
-    AsyncQueryStatus:
-      description: Status `initialisationFailedSiteOffline` means query failed as the site closed session. `initialisationFailedSiteUnreachable` means site hasn't contacted two minutes.
-      type: string
-      enum:
-      - initialising
-      - initialisationFailedCacheError
-      - initialisationFailedSiteOffline
-      - initialisationFailedSiteUnreachable
-      - queued
-      - expiredInQueue
-      - executing
-      - executionFailed
-      - uploading
-      - uploadFailed
-      - successful
+      - storedProcedure
+      default: text
     StatusTimingImmediate:
       type: object
       description: The server time (UTC) at which a query entered and exited the various states.
@@ -860,29 +743,6 @@ components:
       required:
       - initialising
       - executing
-    Id:
-      type: string
-      format: uuid
-      description: Unique identifier of the entity.
-    Size:
-      description: The maximum size, in bytes, of the data within the column.
-      type: integer
-      example: 43
-    ExecutionMode:
-      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
-      type: string
-      enum:
-      - reader
-      - nonQuery
-      - scalar
-      default: reader
-    ImmediateMaxTimeInQueue:
-      type: integer
-      format: milli-seconds
-      example: 15000
-      minimum: 0
-      maximum: 60000
-      default: 30000
     SuccessfulImmediateQueryProperties:
       type: object
       properties:
@@ -908,120 +768,6 @@ components:
       - metrics
       - result
       - completedAt
-    NonQueryResult:
-      type: object
-      required:
-      - rowsAffected
-      - size
-      properties:
-        rowsAffected:
-          type: integer
-          example: 30
-        size:
-          type: integer
-          example: 25
-        parameters:
-          type: array
-          items:
-            $ref: '#/components/schemas/Parameter'
-    SiteId:
-      type: string
-      format: uuid
-      description: Halo GUID of the site.
-    Value:
-      description: Gets or sets the value of the parameter.
-      type:
-      - string
-      - 'null'
-      format: base64 (output)
-      example: '66'
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              format: httpStatus
-            statusText:
-              type: string
-              format: httpStatusPhrase
-            message:
-              type: string
-    StatusTiming:
-      type: object
-      description: The server time (UTC) at which a query entered and exited the various states.
-      properties:
-        initialising:
-          properties:
-            startTime:
-              $ref: '#/components/schemas/Date'
-            endTime:
-              $ref: '#/components/schemas/Date'
-          required:
-          - startTime
-        queued:
-          properties:
-            startTime:
-              $ref: '#/components/schemas/Date'
-            endTime:
-              $ref: '#/components/schemas/Date'
-        executing:
-          properties:
-            startTime:
-              $ref: '#/components/schemas/Date'
-            endTime:
-              $ref: '#/components/schemas/Date'
-        uploading:
-          properties:
-            startTime:
-              $ref: '#/components/schemas/Date'
-            endTime:
-              $ref: '#/components/schemas/Date'
-      required:
-      - initialising
-    ErrorDetails:
-      type: object
-      properties:
-        errorType:
-          $ref: '#/components/schemas/QueryExecutionFailErrorType'
-        errorCode:
-          type: integer
-        errorMessage:
-          type: string
-    RequestSize:
-      type: integer
-      example: 98
-    AsyncCommand:
-      allOf:
-      - type: object
-        properties:
-          maxTimeInQueue:
-            $ref: '#/components/schemas/AsyncMaxTimeInQueue'
-          command:
-            $ref: '#/components/schemas/Command'
-          catalogue:
-            $ref: '#/components/schemas/Catalogue'
-        required:
-        - command
-    Date:
-      type: string
-      format: date-time
-    Data:
-      type: string
-      format: base64
-      description: Result data that is base64 encoded returned from the executed query.
-      example: e2lk...
-    QueryMetrics:
-      type: object
-      required:
-      - sqlExecutionDuration
-      properties:
-        sqlExecutionDuration:
-          type: integer
-          example: 1000
-          description: The number of milli-seconds from when Halo Link Service sends a query to the database until it gets a response.
     AsyncQuery:
       type: object
       required:
@@ -1072,13 +818,152 @@ components:
           $ref: '#/components/schemas/Date'
         updatedAt:
           $ref: '#/components/schemas/Date'
-    SuccessfulImmediateQuery:
+    FailedQueryErrorPropertiesV2:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - executionFailed
+        statusTiming:
+          $ref: '#/components/schemas/StatusTiming'
+          example:
+            statusTiming:
+              initialising:
+                startTime: '2019-08-24T14:15:22.847Z'
+              executing:
+                startTime: '2019-08-24T14:15:22.847Z'
+        errorCode:
+          deprecated: true
+          type: integer
+        errorMessage:
+          deprecated: true
+          type: string
+        errorDetails:
+          $ref: '#/components/schemas/ErrorDetails'
+        completedAt:
+          $ref: '#/components/schemas/Date'
+    Id:
+      type: string
+      format: uuid
+      description: Unique identifier of the entity.
+    Direction:
+      description: A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
+      type: string
+      enum:
+      - output
+      - input
+      - inputOutput
+      - returnValue
+    AsyncCommand:
       allOf:
-      - $ref: '#/components/schemas/ImmediateQuery'
-      - $ref: '#/components/schemas/SuccessfulImmediateQueryProperties'
+      - type: object
+        properties:
+          maxTimeInQueue:
+            $ref: '#/components/schemas/AsyncMaxTimeInQueue'
+          command:
+            $ref: '#/components/schemas/Command'
+          catalogue:
+            $ref: '#/components/schemas/Catalogue'
+        required:
+        - command
+    Command:
+      type: object
+      properties:
+        text:
+          type: string
+          example: GetPatientID
+          description: The SQL statement to execute or the name of the stored procedure to run.
+        executionMode:
+          $ref: '#/components/schemas/ExecutionMode'
+        type:
+          $ref: '#/components/schemas/CommandType'
+        parameters:
+          type: array
+          description: Parameters are used to supply data to, or read outputs from, a stored procedure.
+          items:
+            $ref: '#/components/schemas/Parameter'
+      required:
+      - text
+    RequestSize:
+      type: integer
+      example: 98
+    AsyncQueryInitialised:
+      allOf:
+      - $ref: '#/components/schemas/AsyncQuery'
+      - $ref: '#/components/schemas/InitialisedAsyncQueryProperties'
+    Date:
+      type: string
+      format: date-time
+    ErrorDetails:
+      type: object
+      properties:
+        errorType:
+          $ref: '#/components/schemas/QueryExecutionFailErrorType'
+        errorCode:
+          type: integer
+        errorMessage:
+          type: string
+    Parameter:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '@siteid'
+          description: The name of the parameter.
+        direction:
+          $ref: '#/components/schemas/Direction'
+        type:
+          $ref: '#/components/schemas/Type'
+        value:
+          $ref: '#/components/schemas/Value'
+        size:
+          $ref: '#/components/schemas/Size'
     ResultSize:
       type: integer
       example: 98
+    Size:
+      description: The maximum size, in bytes, of the data within the column.
+      type: integer
+      example: 43
+    NonQueryResult:
+      type: object
+      required:
+      - rowsAffected
+      - size
+      properties:
+        rowsAffected:
+          type: integer
+          example: 30
+        size:
+          type: integer
+          example: 25
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parameter'
+    ExecutionFailedImmediateQuery:
+      allOf:
+      - $ref: '#/components/schemas/ImmediateQuery'
+      - $ref: '#/components/schemas/FailedQueryErrorPropertiesV2'
+    CommandSize:
+      type: integer
+      example: 98
+    ExecutionMode:
+      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
+      type: string
+      enum:
+      - reader
+      - nonQuery
+      - scalar
+      default: reader
+    AsyncMaxTimeInQueue:
+      type: integer
+      format: milli-seconds
+      example: 900000
+      minimum: 0
+      maximum: 7200000
+      default: 3600000
     QueryExecutionFailErrorType:
       type: string
       enum:
@@ -1086,25 +971,140 @@ components:
       - mssql
       - fbsql
       - haloLink
-    Catalogue:
+    ImmediateQuery:
+      type: object
+      required:
+      - id
+      - integratorId
+      - siteId
+      - mode
+      - status
+      - maxTimeInQueue
+      - commandSize
+      - createdAt
+      - updatedAt
+      - requestSize
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        integratorId:
+          $ref: '#/components/schemas/IntegratorId'
+        siteId:
+          $ref: '#/components/schemas/SiteId'
+        mode:
+          type: string
+          enum:
+          - immediate
+        maxTimeInQueue:
+          $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
+        commandSize:
+          $ref: '#/components/schemas/CommandSize'
+        requestSize:
+          $ref: '#/components/schemas/RequestSize'
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        updatedAt:
+          $ref: '#/components/schemas/Date'
+    Data:
       type: string
-      example: Patients
-      description: Indicates which database to run against. If no catalogue is specified a default catalogue will be chosen instead. Supported for all PMS with multiple databases. Database catalogues, including the default catalogue, can be identified from the catalogue.name property returned by the Site API endpoints, and are consistent across all sites of a single PMS type.
-    ExecutionFailedImmediateQuery:
-      allOf:
-      - $ref: '#/components/schemas/ImmediateQuery'
-      - $ref: '#/components/schemas/FailedQueryErrorPropertiesV2'
-    IntegratorId:
+      format: base64
+      description: Result data that is base64 encoded returned from the executed query.
+      example: e2lk...
+    AsyncQueryStatus:
+      description: Status `initialisationFailedSiteOffline` means query failed as the site closed session. `initialisationFailedSiteUnreachable` means site hasn't contacted two minutes.
       type: string
-      format: uuid
-      description: Id of the Integrator that created the query.
-    CommandSize:
-      type: integer
-      example: 98
-    AsyncQueryInitialised:
+      enum:
+      - initialising
+      - initialisationFailedCacheError
+      - initialisationFailedSiteOffline
+      - initialisationFailedSiteUnreachable
+      - queued
+      - expiredInQueue
+      - executing
+      - executionFailed
+      - uploading
+      - uploadFailed
+      - successful
+    StatusTiming:
+      type: object
+      description: The server time (UTC) at which a query entered and exited the various states.
+      properties:
+        initialising:
+          properties:
+            startTime:
+              $ref: '#/components/schemas/Date'
+            endTime:
+              $ref: '#/components/schemas/Date'
+          required:
+          - startTime
+        queued:
+          properties:
+            startTime:
+              $ref: '#/components/schemas/Date'
+            endTime:
+              $ref: '#/components/schemas/Date'
+        executing:
+          properties:
+            startTime:
+              $ref: '#/components/schemas/Date'
+            endTime:
+              $ref: '#/components/schemas/Date'
+        uploading:
+          properties:
+            startTime:
+              $ref: '#/components/schemas/Date'
+            endTime:
+              $ref: '#/components/schemas/Date'
+      required:
+      - initialising
+    ImmediateCommand:
       allOf:
-      - $ref: '#/components/schemas/AsyncQuery'
-      - $ref: '#/components/schemas/InitialisedAsyncQueryProperties'
+      - type: object
+        properties:
+          maxTimeInQueue:
+            $ref: '#/components/schemas/ImmediateMaxTimeInQueue'
+          command:
+            $ref: '#/components/schemas/Command'
+          catalogue:
+            $ref: '#/components/schemas/Catalogue'
+        required:
+        - command
+    Type:
+      description: Specifies SQL Server-specific data type of a field, property.
+      type: string
+      enum:
+      - BigInt
+      - Binary
+      - Bit
+      - Char
+      - String
+      - Date
+      - DateTime
+      - DateTime2
+      - DateTimeOffset
+      - Decimal
+      - Float
+      - Image
+      - Int
+      - Money
+      - NChar
+      - NText
+      - NVarChar
+      - Real
+      - SmallDateTime
+      - SmallInt
+      - SmallMoney
+      - Structured
+      - Text
+      - Time
+      - Timestamp
+      - TinyInt
+      - Udt
+      - UniqueIdentifier
+      - VarBinary
+      - VarChar
+      - Variant
+      - Xml
     QueryStatusBatchResultStatus:
       type: string
       enum:
@@ -1123,13 +1123,6 @@ components:
         query:
           $ref: '#/components/schemas/AsyncQuery'
   parameters:
-    QueryId:
-      name: queryId
-      in: path
-      description: Id of the query.
-      required: true
-      schema:
-        type: string
     SiteId:
       name: siteId
       in: path
@@ -1145,6 +1138,13 @@ components:
       schema:
         type: integer
         minimum: 1
+    QueryId:
+      name: queryId
+      in: path
+      description: Id of the query.
+      required: true
+      schema:
+        type: string
   requestBodies:
     commandBySiteImmediatePostReqBody:
       content:
