@@ -164,7 +164,62 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  parameters:
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+    PracticeManagementSiteIdRequired:
+      name: practiceManagementSiteId
+      in: query
+      description: Filters by the PMS Site Id.
+      schema:
+        type: string
+      required: true
+    PracticeManagementName:
+      name: practiceManagementName
+      in: query
+      description: Filters by the name of the Practice Management Software used by the site.
+      schema:
+        $ref: '#/components/schemas/PracticeManagementName'
+      required: true
   responses:
+    403Error:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 403
+              statusText: Forbidden
+              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    200IntegratorGetSites:
+      description: Sites retrieved.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sites:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SiteForIntegrator'
+    502Error:
+      description: Bad gateway. The practice management software returned an unexpected error or result code.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 502
+              statusText: Bad Gateway
+              message: The practice management software returned an unexpected result code.
     500Error:
       description: Internal server error.
       content:
@@ -176,6 +231,17 @@ components:
               status: 500
               statusText: Internal Server Error
               message: Failed to create query container in CosmosDB.
+    400Error:
+      description: Invalid request path parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
     401Error:
       description: Unauthorized request.
       content:
@@ -193,50 +259,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SiteForIntegrator'
-    400Error:
-      description: Invalid request path parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 400
-              statusText: Bad Request
-              message: Malformed SQL
-    502Error:
-      description: Bad gateway. The practice management software returned an unexpected error or result code.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 502
-              statusText: Bad Gateway
-              message: The practice management software returned an unexpected result code.
-    200IntegratorGetSites:
-      description: Sites retrieved.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              sites:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteForIntegrator'
-    403Error:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 403
-              statusText: Forbidden
-              message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
     404Error:
       description: The server cannot find the requested resource.
       content:
@@ -249,43 +271,6 @@ components:
               statusText: Not Found
               message: The server cannot find the requested resource.
   schemas:
-    HaloLinkVersion:
-      type: string
-      format: version
-      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
-      example: 22.1207.209
-    PMSType:
-      enum:
-      - BestPractice
-      - Zedmed
-      - D4w
-      example: BestPractice
-      description: The name of the practice management software.
-    SiteId:
-      type: string
-      format: uuid
-      description: Halo GUID of the site.
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              format: httpStatus
-            statusText:
-              type: string
-              format: httpStatusPhrase
-            message:
-              type: string
-    PracticeManagementName:
-      type: string
-      description: Name of the practice management software.
-      enum:
-      - Best Practice
-      - Zedmed
-      - D4w
     SiteForIntegrator:
       type: object
       properties:
@@ -350,6 +335,14 @@ components:
           format: date-time
           description: Last updated time on Halo Api server. Date in UTC.
           example: '2022-12-25T12:25:01Z'
+    SiteStatus:
+      type: string
+      description: Status of the site.
+      enum:
+      - initialising
+      - active
+      - removed
+      - uninstalled
     PracticeMetadata:
       type: object
       properties:
@@ -368,6 +361,43 @@ components:
           type: string
           example: 3.4.1
           description: The version of the practice management software.
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
+    SiteId:
+      type: string
+      format: uuid
+      description: Halo GUID of the site.
+    PracticeManagementName:
+      type: string
+      description: Name of the practice management software.
+      enum:
+      - Best Practice
+      - Zedmed
+      - D4w
+    HaloLinkVersion:
+      type: string
+      format: version
+      description: Assembly version of Halo Link client making the call. Usually CalVer [YY.MMDD.BuildNumber.0]
+      example: 22.1207.209
+    PMSType:
+      enum:
+      - BestPractice
+      - Zedmed
+      - D4w
+      example: BestPractice
+      description: The name of the practice management software.
     SiteCatalogues:
       type: array
       description: List of catalogues (databases) available for the site.
@@ -382,14 +412,6 @@ components:
             type: boolean
             example: true
             description: If no catalogue is specified in the Query POST, the default catalogue will be used.
-    SiteStatus:
-      type: string
-      description: Status of the site.
-      enum:
-      - initialising
-      - active
-      - removed
-      - uninstalled
     SiteAvailability:
       type: string
       description: Availability of the site based on time last heard from the site.
@@ -397,28 +419,6 @@ components:
       - online
       - offline
       - unreachable
-  parameters:
-    SiteId:
-      name: siteId
-      in: path
-      description: Halo GUID of the site.
-      required: true
-      schema:
-        type: string
-    PracticeManagementName:
-      name: practiceManagementName
-      in: query
-      description: Filters by the name of the Practice Management Software used by the site.
-      schema:
-        $ref: '#/components/schemas/PracticeManagementName'
-      required: true
-    PracticeManagementSiteIdRequired:
-      name: practiceManagementSiteId
-      in: query
-      description: Filters by the PMS Site Id.
-      schema:
-        type: string
-      required: true
   securitySchemes:
     SubscriptionKey:
       type: apiKey
