@@ -2,7 +2,7 @@
 name: FHIR patient lookup and summary (Bp Premier)
 description: Search a paired Bp Premier practice for a patient and retrieve a Patient Summary via the Halo Cloud FHIR API.
 api: openapi/haloconnect-integrator-openapi.json
-operations: [getSites, Integrator_PairSite, getFhirQuery, postFhirSearch]
+operations: [getSites, Integrator_PairSite, getIntegratorSitesBySiteIdFhirR4ByFhirParameters, postIntegratorSitesBySiteIdFhirR4ByResourceSearch]
 ---
 
 # FHIR patient lookup and summary (Bp Premier)

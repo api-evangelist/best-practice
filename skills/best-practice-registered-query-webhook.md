@@ -2,7 +2,7 @@
 name: Register a recurring query and receive webhook notifications
 description: Create a registered (recurring) SQL query against a paired Bp Premier practice and consume HMAC-signed webhook notifications instead of polling.
 api: openapi/haloconnect-integrator-openapi.json
-operations: [createRegisteredQuery, getRegisteredQueries, getRegisteredQuery, getRegisteredQueryResult, cancelRegisteredQuery]
+operations: [postIntegratorSitesBySiteIdQueriesRegistered, getIntegratorSitesBySiteIdQueriesRegistered, getIntegratorSitesBySiteIdQueriesRegisteredByQueryId, getIntegratorSitesBySiteIdQueriesRegisteredByQueryIdResults, deleteIntegratorSitesBySiteIdQueriesRegisteredByQueryId]
 ---
 
 # Register a recurring query and receive webhook notifications

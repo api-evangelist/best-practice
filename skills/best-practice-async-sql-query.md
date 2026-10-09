@@ -2,7 +2,7 @@
 name: Run an async SQL Passthrough query and page results
 description: Submit a large SQL Passthrough query against a paired Bp Premier practice, poll for completion, and page through the results via the Halo Cloud Integrator API.
 api: openapi/haloconnect-integrator-openapi.json
-operations: [createAsyncQuery, getQuery, getQueryStatusBatch, getResultPage, streamResultPage]
+operations: [postIntegratorSitesBySiteIdQueriesAsync, getIntegratorSitesBySiteIdQueriesByQueryId, getQueryStatusBatch, getIntegratorSitesBySiteIdQueriesByQueryIdResultsByPageNumber, streamResultPage]
 ---
 
 # Run an async SQL Passthrough query and page results
