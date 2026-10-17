@@ -209,6 +209,92 @@ paths:
     - url: https://api.stage.haloconnect.io
       description: Stage
 components:
+  parameters:
+    FhirParameters:
+      name: fhirParameters
+      in: path
+      description: Resource names and search parameters per the R4 FHIR specification for using [RESTful APIs](http://hl7.org/fhir/R4/http.html) and [search](http://hl7.org/fhir/R4/search.html).
+      schema:
+        type: string
+      required: true
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
+    FhirResource:
+      name: resource
+      in: path
+      description: The name of the FHIR resource to search for.
+      schema:
+        type: string
+      required: true
+  responses:
+    200FhirSearch:
+      description: Query executed.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/FhirBundle'
+    504ErrorForFhirQuery:
+      description: Server request to upstream resource timed out.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    200FhirQuery:
+      description: Query executed.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/FhirResource'
+            - $ref: '#/components/schemas/FhirBundle'
+    404ErrorForFhirQuery:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    400ErrorForFhirQuery:
+      description: Bad Request - Invalid request path, parameter or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    500ErrorForFhirQuery:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    503ErrorForFhirQuery:
+      description: The server is not ready to handle the request.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/OperationOutcome'
+            - $ref: '#/components/schemas/Error'
+    401ErrorForFhirQuery:
+      description: Unauthorized request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    403ErrorForFhirQuery:
+      description: Access to resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
     Error:
       type: object
@@ -224,14 +310,20 @@ components:
               format: httpStatusPhrase
             message:
               type: string
-    FhirBundle:
+    OperationOutcome:
       type: object
-      description: Bundle of FHIR resources of the requested type(s).
+      description: OperationOutcome resource containing error details.
       example:
         application/json:
-          resourceType: Bundle
-          type: searchset
-          total: 0
+          resourceType: OperationOutcome
+          issue:
+          - severity: fatal
+            code: exception
+            details:
+              coding:
+              - system: http://hl7.org/fhir/dotnet-api-operation-outcome
+                code: '5003'
+              text: Details of error
     FhirResource:
       type: object
       description: Singular FHIR resource of the requested type.
@@ -247,106 +339,14 @@ components:
             - John
             prefix:
             - Mr
-    OperationOutcome:
+    FhirBundle:
       type: object
-      description: OperationOutcome resource containing error details.
+      description: Bundle of FHIR resources of the requested type(s).
       example:
         application/json:
-          resourceType: OperationOutcome
-          issue:
-          - severity: fatal
-            code: exception
-            details:
-              coding:
-              - system: http://hl7.org/fhir/dotnet-api-operation-outcome
-                code: '5003'
-              text: Details of error
-  responses:
-    404ErrorForFhirQuery:
-      description: The server cannot find the requested resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    503ErrorForFhirQuery:
-      description: The server is not ready to handle the request.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/OperationOutcome'
-            - $ref: '#/components/schemas/Error'
-    403ErrorForFhirQuery:
-      description: Access to resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    504ErrorForFhirQuery:
-      description: Server request to upstream resource timed out.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/OperationOutcome'
-            - $ref: '#/components/schemas/Error'
-    200FhirSearch:
-      description: Query executed.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/FhirBundle'
-    401ErrorForFhirQuery:
-      description: Unauthorized request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    400ErrorForFhirQuery:
-      description: Bad Request - Invalid request path, parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    200FhirQuery:
-      description: Query executed.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/FhirResource'
-            - $ref: '#/components/schemas/FhirBundle'
-    500ErrorForFhirQuery:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/OperationOutcome'
-            - $ref: '#/components/schemas/Error'
-  parameters:
-    FhirResource:
-      name: resource
-      in: path
-      description: The name of the FHIR resource to search for.
-      schema:
-        type: string
-      required: true
-    SiteId:
-      name: siteId
-      in: path
-      description: Halo GUID of the site.
-      required: true
-      schema:
-        type: string
-    FhirParameters:
-      name: fhirParameters
-      in: path
-      description: Resource names and search parameters per the R4 FHIR specification for using [RESTful APIs](http://hl7.org/fhir/R4/http.html) and [search](http://hl7.org/fhir/R4/search.html).
-      schema:
-        type: string
-      required: true
+          resourceType: Bundle
+          type: searchset
+          total: 0
   securitySchemes:
     SubscriptionKey:
       type: apiKey

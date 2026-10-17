@@ -309,7 +309,194 @@ paths:
     - url: https://api.stage.haloconnect.io
       description: Stage
 components:
+  parameters:
+    QueryId:
+      name: queryId
+      in: path
+      description: Id of the query.
+      required: true
+      schema:
+        type: string
+    SiteId:
+      name: siteId
+      in: path
+      description: Halo GUID of the site.
+      required: true
+      schema:
+        type: string
   schemas:
+    Id:
+      type: string
+      format: uuid
+      description: Unique identifier of the entity.
+    CommandType:
+      description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
+      type: string
+      enum:
+      - text
+      - storedProcedure
+      default: text
+    Parameter:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '@siteid'
+          description: The name of the parameter.
+        direction:
+          $ref: '#/components/schemas/Direction'
+        type:
+          $ref: '#/components/schemas/Type'
+        value:
+          $ref: '#/components/schemas/Value'
+        size:
+          $ref: '#/components/schemas/Size'
+    Direction:
+      description: A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
+      type: string
+      enum:
+      - output
+      - input
+      - inputOutput
+      - returnValue
+    ExecutionMode:
+      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
+      type: string
+      enum:
+      - reader
+      - nonQuery
+      - scalar
+      default: reader
+    RegisteredQuery:
+      type: object
+      required:
+      - id
+      - name
+      - registeredQueryType
+      - status
+      - frequency
+      - duration
+      - createdAt
+      - metrics
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          description: Customer set identifier for this registered query.
+        registeredQueryType:
+          type: string
+          enum:
+          - query
+        status:
+          $ref: '#/components/schemas/RegisteredQueryStatus'
+        frequency:
+          type: integer
+          description: Seconds between each query execution.
+          example: 300
+        duration:
+          type: integer
+          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
+          example: 43200
+        lastHash:
+          type: string
+          description: Hash of the last successful query result. Present only when the run completes successfully; otherwise empty.
+        lastErrorDetails:
+          description: Details of the last error thrown by running the registered query. Only populated if the query errors.
+          $ref: '#/components/schemas/ErrorDetails'
+        metrics:
+          $ref: '#/components/schemas/RegisteredQueryMetrics'
+        createdAt:
+          description: When the registered query was created.
+          $ref: '#/components/schemas/Date'
+        completedAt:
+          description: When the registered query completed. Only populated on completion.
+          $ref: '#/components/schemas/Date'
+    Data:
+      type: string
+      format: base64
+      description: Result data that is base64 encoded returned from the executed query.
+      example: e2lk...
+    Value:
+      description: Gets or sets the value of the parameter.
+      type:
+      - string
+      - 'null'
+      format: base64 (output)
+      example: '66'
+    RegisteredQueryId:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+    RegisteredQueryMetrics:
+      type: object
+      properties:
+        lastSucceededAt:
+          type: string
+        lastFailedAt:
+          type: string
+        lastExecutionDuration:
+          type: integer
+        executionSucceededCount:
+          type: integer
+        executionFailedCount:
+          type: integer
+        resultSizeSum:
+          type: integer
+        requestSize:
+          type: integer
+    RegisteredQueryPostReq:
+      type: object
+      required:
+      - name
+      - registeredQueryType
+      - frequency
+      - duration
+      - registerCommand
+      properties:
+        name:
+          type: string
+          description: Customer set identifier for this registered query.
+        registeredQueryType:
+          type: string
+          enum:
+          - query
+        frequency:
+          type: integer
+          description: Seconds between each query execution.
+          example: 300
+        duration:
+          type: integer
+          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
+          example: 43200
+        registerCommand:
+          type: object
+          description: Command to be executed by the registered query.
+          properties:
+            command:
+              $ref: '#/components/schemas/Command'
+    RegisteredQueryStatus:
+      type: string
+      enum:
+      - initialisationFailedCacheError
+      - enabled
+      - cancelled
+      - completed
+    Date:
+      type: string
+      format: date-time
+    ErrorDetails:
+      type: object
+      properties:
+        errorType:
+          $ref: '#/components/schemas/QueryExecutionFailErrorType'
+        errorCode:
+          type: integer
+        errorMessage:
+          type: string
     Command:
       type: object
       properties:
@@ -328,37 +515,20 @@ components:
             $ref: '#/components/schemas/Parameter'
       required:
       - text
-    Size:
-      description: The maximum size, in bytes, of the data within the column.
-      type: integer
-      example: 43
-    CommandType:
-      description: Indicates how the text property is to be interpreted. `text` executes the SQL contained within the text property. `storedProcedure` calls the stored procedure named in the text property. `storedProcedure` is currently experimental.
-      type: string
-      enum:
-      - text
-      - storedProcedure
-      default: text
-    Value:
-      description: Gets or sets the value of the parameter.
-      type:
-      - string
-      - 'null'
-      format: base64 (output)
-      example: '66'
-    Data:
-      type: string
-      format: base64
-      description: Result data that is base64 encoded returned from the executed query.
-      example: e2lk...
-    Direction:
-      description: A value that indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
-      type: string
-      enum:
-      - output
-      - input
-      - inputOutput
-      - returnValue
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              format: httpStatus
+            statusText:
+              type: string
+              format: httpStatusPhrase
+            message:
+              type: string
     RegisteredQueryResult:
       type: object
       required:
@@ -417,70 +587,6 @@ components:
       - VarChar
       - Variant
       - Xml
-    RegisteredQueryMetrics:
-      type: object
-      properties:
-        lastSucceededAt:
-          type: string
-        lastFailedAt:
-          type: string
-        lastExecutionDuration:
-          type: integer
-        executionSucceededCount:
-          type: integer
-        executionFailedCount:
-          type: integer
-        resultSizeSum:
-          type: integer
-        requestSize:
-          type: integer
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              format: httpStatus
-            statusText:
-              type: string
-              format: httpStatusPhrase
-            message:
-              type: string
-    RegisteredQueryStatus:
-      type: string
-      enum:
-      - initialisationFailedCacheError
-      - enabled
-      - cancelled
-      - completed
-    RegisteredQueryId:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-    Parameter:
-      type: object
-      properties:
-        name:
-          type: string
-          example: '@siteid'
-          description: The name of the parameter.
-        direction:
-          $ref: '#/components/schemas/Direction'
-        type:
-          $ref: '#/components/schemas/Type'
-        value:
-          $ref: '#/components/schemas/Value'
-        size:
-          $ref: '#/components/schemas/Size'
-    Id:
-      type: string
-      format: uuid
-      description: Unique identifier of the entity.
     QueryExecutionFailErrorType:
       type: string
       enum:
@@ -488,117 +594,13 @@ components:
       - mssql
       - fbsql
       - haloLink
-    Date:
-      type: string
-      format: date-time
-    ExecutionMode:
-      description: Selects between fetching data or writing to the database. `reader` executes the command (e.g. SELECT) and returns rows of data. `nonQuery` executes the command (e.g. UPDATE, INSERT, or DELETE) and does not return data.  `scalar` returns first value of first row of query results.  For Querys using RETURN @values please use `returnValue` Parameters.
-      type: string
-      enum:
-      - reader
-      - nonQuery
-      - scalar
-      default: reader
-    RegisteredQuery:
-      type: object
-      required:
-      - id
-      - name
-      - registeredQueryType
-      - status
-      - frequency
-      - duration
-      - createdAt
-      - metrics
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        name:
-          type: string
-          description: Customer set identifier for this registered query.
-        registeredQueryType:
-          type: string
-          enum:
-          - query
-        status:
-          $ref: '#/components/schemas/RegisteredQueryStatus'
-        frequency:
-          type: integer
-          description: Seconds between each query execution.
-          example: 300
-        duration:
-          type: integer
-          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
-          example: 43200
-        lastHash:
-          type: string
-          description: Hash of the last successful query result. Present only when the run completes successfully; otherwise empty.
-        lastErrorDetails:
-          description: Details of the last error thrown by running the registered query. Only populated if the query errors.
-          $ref: '#/components/schemas/ErrorDetails'
-        metrics:
-          $ref: '#/components/schemas/RegisteredQueryMetrics'
-        createdAt:
-          description: When the registered query was created.
-          $ref: '#/components/schemas/Date'
-        completedAt:
-          description: When the registered query completed. Only populated on completion.
-          $ref: '#/components/schemas/Date'
-    ErrorDetails:
-      type: object
-      properties:
-        errorType:
-          $ref: '#/components/schemas/QueryExecutionFailErrorType'
-        errorCode:
-          type: integer
-        errorMessage:
-          type: string
-    RegisteredQueryPostReq:
-      type: object
-      required:
-      - name
-      - registeredQueryType
-      - frequency
-      - duration
-      - registerCommand
-      properties:
-        name:
-          type: string
-          description: Customer set identifier for this registered query.
-        registeredQueryType:
-          type: string
-          enum:
-          - query
-        frequency:
-          type: integer
-          description: Seconds between each query execution.
-          example: 300
-        duration:
-          type: integer
-          description: Duration in seconds the query will run for. Up to 86400 seconds (24 hours).
-          example: 43200
-        registerCommand:
-          type: object
-          description: Command to be executed by the registered query.
-          properties:
-            command:
-              $ref: '#/components/schemas/Command'
-  parameters:
-    SiteId:
-      name: siteId
-      in: path
-      description: Halo GUID of the site.
-      required: true
-      schema:
-        type: string
-    QueryId:
-      name: queryId
-      in: path
-      description: Id of the query.
-      required: true
-      schema:
-        type: string
+    Size:
+      description: The maximum size, in bytes, of the data within the column.
+      type: integer
+      example: 43
   responses:
+    204RegisteredQueryDelete:
+      description: Registered Query Delete
     403Error:
       description: Access to resource is forbidden.
       content:
@@ -610,36 +612,6 @@ components:
               status: 403
               statusText: Forbidden
               message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
-    200RegisteredQueryResult:
-      description: Registered Query Result
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RegisteredQueryResult'
-    500Error:
-      description: Internal server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 500
-              statusText: Internal Server Error
-              message: Failed to create query container in CosmosDB.
-    204RegisteredQueryDelete:
-      description: Registered Query Delete
-    400Error:
-      description: Invalid request path parameter or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              status: 400
-              statusText: Bad Request
-              message: Malformed SQL
     401Error:
       description: Unauthorized request.
       content:
@@ -651,6 +623,23 @@ components:
               status: 401
               statusText: Unauthorized
               message: Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.
+    404Error:
+      description: The server cannot find the requested resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              statusText: Not Found
+              message: The server cannot find the requested resource.
+    200RegisteredQueryResult:
+      description: Registered Query Result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQueryResult'
     200GetRegisteredQueries:
       description: List of Registered Queries
       content:
@@ -698,14 +687,6 @@ components:
                 resultSizeSum: 0
                 requestSize: 179
                 lastFailedAt: '2025-05-27T04:59:54.226Z'
-    202RegisteredQuery:
-      description: Accept Registered Query
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RegisteredQueryId'
-          example:
-            id: 785f1ae1-1234-abcd-56ef-8679258f4aee
     200RegisteredQuery:
       description: Registered Query
       content:
@@ -751,17 +732,36 @@ components:
                   resultSizeSum: 0
                   requestSize: 179
                   lastFailedAt: '2025-05-27T04:59:54.226Z'
-    404Error:
-      description: The server cannot find the requested resource.
+    202RegisteredQuery:
+      description: Accept Registered Query
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisteredQueryId'
+          example:
+            id: 785f1ae1-1234-abcd-56ef-8679258f4aee
+    400Error:
+      description: Invalid request path parameter or body.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
             error:
-              status: 404
-              statusText: Not Found
-              message: The server cannot find the requested resource.
+              status: 400
+              statusText: Bad Request
+              message: Malformed SQL
+    500Error:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 500
+              statusText: Internal Server Error
+              message: Failed to create query container in CosmosDB.
   requestBodies:
     RegisteredPostReqBody:
       content:
