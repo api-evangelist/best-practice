@@ -52,6 +52,18 @@ x-docs-platform-checked: 2026-09-20
 tags:
 - Healthcare
 - Australia
+- Electronic Health Records
+- FHIR
+- HL7
+- Interoperability
+- AU Base
+- Practice Management
+- General Practice
+- Appointments
+- Scheduling
+tags_raw:
+- Healthcare
+- Australia
 - EHR
 - EMR
 - FHIR
