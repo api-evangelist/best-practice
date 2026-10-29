@@ -1,4 +1,4 @@
-# Best Practice Software (best-practice)
+# Best Practice Software
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,83 +64,130 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Best Practice Software is an Australian clinical and practice-management software company, headquartered in Bundaberg, Queensland, and one half of the Australian GP-software duopoly (alongside MedicalDirector). Its flagship products - Bp Premier (general practice), Bp VIP.net (specialist and allied), and Bp Allied - run in thousands of Australian medical practices. Best Practice's programmatic surface is delivered through Halo Connect (Halo Cloud / Halo Link), a FHIR-based integration platform for approved partners. The FHIR API for Bp Premier is built to AU Base 4.1.0 (falling back to HL7 FHIR R4 4.0.1). Access is partner-gated - a Halo Cloud subscription plus per-practice pairing - not a self-serve public API.
+Best Practice Software is an Australian clinical and practice-management software company, headquartered in Bundaberg, Queensland, and one half of the Australian GP-software duopoly (alongside MedicalDirector). Its flagship products - Bp Premier (general practice), Bp VIP.net (specialist and allied), and Bp Allied - run in thousands of Australian medical practices. Best Practice's programmatic surface is delivered through Halo Connect (Halo Cloud / Halo Link), a FHIR-based integration platform that lets approved partners query practice data over a modern API instead of the legacy SQL database. The FHIR API for Bp Premier is built to the AU Base 4.1.0 implementation guide, falling back to HL7 FHIR R4 (4.0.1), and exposes resources such as Patient, Appointment, Slot (Find Free Slots) and a Patient $summary document. Halo Cloud also offers SQL Passthrough and Registered Queries for structured practice data. Access is gated - integrators require a Halo Cloud subscription plus per-practice pairing and PMS-managed database credentials, authenticated with an Azure API Management subscription key (desktop apps additionally use a bearer JWT and device id). This is not a self-serve public API; it is a partner-onboarded, standards-aligned interoperability layer for the Australian primary-care market.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/best-practice/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/best-practice/refs/heads/main/apis.yml)
+**Areas:** Healthcare · Australia · Electronic Health Records · FHIR · HL7 · Interoperability · AU Base · Practice Management · General Practice · Appointments · Scheduling
 
-## Tags
+## Best Practice Software on APIs.io
 
-- Healthcare
-- Australia
-- EHR / EMR
-- FHIR / HL7 / AU Base
-- Interoperability
-- Practice Management / General Practice
-- Appointments / Scheduling
+Everything profiled for Best Practice Software is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/best-practice/](https://apis.io/providers/best-practice/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (5)
 
-- **Created:** 2026-07-24
-- **Modified:** 2026-07-24
+- [Best Practice Software FHIR API](https://apis.io/apis/best-practice/best-practice-fhir-api/) — Query practice data using FHIR resources.
+- [Best Practice Software Registered Queries API](https://apis.io/apis/best-practice/best-practice-registered-queries-api/) — The Registered Queries API from Best Practice Software — 6 operation(s) for registered queries.
+- [Best Practice Software Sites API](https://apis.io/apis/best-practice/best-practice-sites-api/) — Endpoints for practice onboarding and site metadata.
+- [Best Practice Software SQL Passthrough API](https://apis.io/apis/best-practice/best-practice-sql-passthrough-api/) — Send SQL queries to practices as immediate, async or registered queries. **Immediate queries** are small, time-sensitive queries that return a result in…
+- [Best Practice Software Tokens API](https://apis.io/apis/best-practice/best-practice-tokens-api/) — Obtain authorization tokens for desktop applications to authenticate API requests.
 
-## APIs
+### Published properties
 
-### Halo Cloud API for Integrators
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-The integrator-facing Halo Cloud API from Best Practice's Halo Connect platform. Covers Sites (site metadata and onboarding), SQL Passthrough (SQL against the practice database), FHIR (search practice data as HL7 FHIR R4 resources), and Registered Queries (recurring SQL). OpenAPI 3.1.1, authenticated with an Azure API Management subscription key (`Ocp-Apim-Subscription-Key`); every call requires an active site pairing.
+#### AsyncAPI (1)
 
-- **Human URL:** [https://docs.haloconnect.io/api-reference/integrator-openapi.html](https://docs.haloconnect.io/api-reference/integrator-openapi.html)
-- **Base URL:** `https://api.haloconnect.io`
+Event-driven and webhook contracts.
 
-#### Properties
+- [Best Practice Webhooks](https://apis.io/asyncapis/best-practice/best-practice-webhooks/)
 
-- [OpenAPI](openapi/haloconnect-integrator-openapi.json) - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [API Reference](https://docs.haloconnect.io/api-reference/integrator-openapi.html)
-- [Documentation](https://docs.haloconnect.io/halo-cloud/overview/)
-- [Getting Started](https://docs.haloconnect.io/halo-cloud/getting-started/)
+#### MCP servers (1)
 
-### Halo Cloud API for Desktop Applications
+Model Context Protocol servers that expose the API to agents.
 
-The desktop-application-facing Halo Cloud API from Halo Connect. Provides a token endpoint plus SQL Passthrough and FHIR query access for locally installed applications integrating with Bp Premier. OpenAPI 3.1.1, authenticated with a subscription key together with a bearer JWT and a `DeviceId` header.
+- [halo-cloud-integrator](https://apis.io/servers/best-practice/halo-cloud-integrator/)
 
-- **Human URL:** [https://docs.haloconnect.io/api-reference/desktop-openapi.html](https://docs.haloconnect.io/api-reference/desktop-openapi.html)
-- **Base URL:** `https://api.haloconnect.io`
+#### Agentic access (1)
 
-#### Properties
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [OpenAPI](openapi/haloconnect-desktop-openapi.json) - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [API Reference](https://docs.haloconnect.io/api-reference/desktop-openapi.html)
-- [Documentation](https://docs.haloconnect.io/halo-cloud/overview/)
-- [Getting Started](https://docs.haloconnect.io/halo-cloud/getting-started/)
+- [Best Practice Agentic Access](https://apis.io/agentic-access/best-practice/best-practice-agentic-access/)
 
-### FHIR API for Bp Premier
+#### Collections (2)
 
-The HL7 FHIR API for Best Practice Bp Premier, delivered through Halo Connect. Built to the AU Base 4.1.0 implementation guide, falling back to FHIR R4 (4.0.1). Resources are served under `https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4/` with a CapabilityStatement at `{baseUrl}/metadata`; documented resources and operations include Patient, Appointment, Slot (Find Free Slots) and a Patient `$summary` document. Partner-gated.
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://docs.haloconnect.io/halo-cloud/fhir-api/overview/](https://docs.haloconnect.io/halo-cloud/fhir-api/overview/)
-- **Base URL:** `https://api.haloconnect.io/integrator/sites/{siteId}/fhir/R4`
+- [Halo Cloud API for Desktop Applications](https://apis.io/collections/best-practice/open-haloconnect-desktop/)
+- [Halo Cloud API for Integrators](https://apis.io/collections/best-practice/open-haloconnect-integrator/)
 
-#### Properties
+#### Overlays (2)
 
-- [OpenAPI](openapi/haloconnect-integrator-openapi.json) - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Documentation](https://docs.haloconnect.io/halo-cloud/fhir-api/overview/)
-- [Documentation](https://docs.haloconnect.io/halo-cloud/fhir-api/capabilities/)
-- [Implementation Guide](https://kb.bpsoftware.net/au/bppremier/devportal/Content/Halo/HaloResources.htm) (login required)
+OpenAPI overlays, including conversational phrasing for each operation.
 
-## Common Properties
+- [Best Practice Desktop Overlay](https://apis.io/overlays/best-practice/best-practice-desktop-overlay/)
+- [Best Practice Integrator Overlay](https://apis.io/overlays/best-practice/best-practice-integrator-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Best Practice Authentication](https://apis.io/security/best-practice/best-practice-authentication/)
+- [Best Practice Domain Security](https://apis.io/security/best-practice/best-practice-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://bpsoftware.net/)
-- [Developer Portal](https://docs.haloconnect.io/)
 - [Documentation](https://docs.haloconnect.io/halo-cloud/overview/)
-- [API Reference](https://docs.haloconnect.io/api-reference/integrator-openapi.html)
-- [Getting Started](https://docs.haloconnect.io/halo-cloud/getting-started/)
-- [Blog](https://haloconnect.io/blog)
-- [Status Page](https://status.haloconnect.io/)
+- [Getting started](https://docs.haloconnect.io/halo-cloud/getting-started/)
+- [API reference](https://docs.haloconnect.io/api-reference/integrator-openapi.html)
 - [Support](https://bpsoftware.net/contact/)
-- [Terms of Service](https://bpsoftware.net/terms-of-use/)
-- [Privacy Policy](https://bpsoftware.net/privacy-policy/)
+- [Blog](https://haloconnect.io/blog)
+- [Terms of service](https://bpsoftware.net/terms-of-use/)
+- [Privacy policy](https://bpsoftware.net/privacy-policy/)
+- [Status](https://status.haloconnect.io/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 48.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 59.2 |
+| Contract governance | 18.2 |
+| Operational transparency | 39.5 |
+| Developer ergonomics | 66.1 |
+| Access clarity | 21.1 |
+
+**Agent readiness 26.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 24.2** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/best-practice/](https://apis.io/providers/best-practice/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Best Practice Software: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/best-practice/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
